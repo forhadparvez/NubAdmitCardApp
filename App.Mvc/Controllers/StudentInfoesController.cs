@@ -1,6 +1,9 @@
 ﻿using App.Core.Entities;
 using App.Mvc.Models;
+using App.Mvc.ViewModels;
+using System;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -59,7 +62,7 @@ namespace App.Mvc.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [AllowAnonymous]
-        public async Task<ActionResult> Create([Bind(Include = "Id,ProgramId,ExamId,SemesterId,IdNo,Name,ContactNo,Email")] StudentInfo studentInfo)
+        public async Task<ActionResult> Create([Bind(Include = "Id,ProgramId,ExamId,SemesterId,IdNo,Name,ContactNo,Email,StudentImageFile,StudentPaymentFile")] StudentInfoVm vm)
         {
             var semester = db.Semesters.SingleOrDefault(c => c.IsActive);
             if (semester == null) return View();
@@ -68,8 +71,77 @@ namespace App.Mvc.Controllers
 
             if (ModelState.IsValid)
             {
-                db.StudentInfos.Add(studentInfo);
+                var s = new StudentInfo()
+                {
+                    ProgramId = vm.ProgramId,
+                    ExamId = vm.ExamId,
+                    SemesterId = vm.SemesterId,
+                    IdNo = vm.IdNo,
+                    Name = vm.Name,
+                    ContactNo = vm.ContactNo,
+                    Email = vm.Email
+                };
+
+                db.StudentInfos.Add(s);
                 var r = await db.SaveChangesAsync();
+                try
+                {
+                    var pdfFile1 = vm.StudentImageFile;
+                    var pdfFile2 = vm.StudentPaymentFile;
+                    if (pdfFile1 != null && pdfFile2 != null)
+                    {
+                        // Save Path
+                        const string drive = "D";
+
+                        var savePathWithoutDrive1 = ":\\NubAdmit\\StudentImage\\";
+                        var savePathWithoutDrive2 = ":\\NubAdmit\\PaymentImage\\";
+                        string fileSavePath1 = drive + savePathWithoutDrive1;
+                        string fileSavePath2 = drive + savePathWithoutDrive2;
+
+                        if (!Directory.Exists(fileSavePath1))
+                        {
+                            Directory.CreateDirectory(fileSavePath1);
+                        }
+                        if (!Directory.Exists(fileSavePath2))
+                        {
+                            Directory.CreateDirectory(fileSavePath2);
+                        }
+
+                        var fileName = s.Id + ".jpg";
+                        // var fileExtension = Path.GetExtension(pdfFile.FileName);
+
+                        // Check File is Exist
+                        if (!System.IO.File.Exists(fileSavePath1 + fileName))
+                        {
+                            // Save file
+                            pdfFile1.SaveAs(fileSavePath1 + fileName);
+
+                            // Save Path in Database
+                            s.ImageFilePath = savePathWithoutDrive1 + fileName;
+                        }
+
+                        if (!System.IO.File.Exists(fileSavePath2 + fileName))
+                        {
+                            // Save file
+                            pdfFile2.SaveAs(fileSavePath2 + fileName);
+
+                            // Save Path in Database
+                            s.PaymentFilePath = savePathWithoutDrive2 + fileName;
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    s.IsDelete = true;
+                    await db.SaveChangesAsync();
+
+                    ViewBag.Message = "Error: " + e.Message;
+                    ViewBag.MessageColor = "text-danger";
+                    return View();
+                }
+
+
+                r = await db.SaveChangesAsync();
                 if (r > 0)
                 {
                     ModelState.Clear();
@@ -80,18 +152,18 @@ namespace App.Mvc.Controllers
                     return View();
                 }
 
-                ViewBag.ExamId = new SelectList(db.Exams, "Id", "Name", studentInfo.ExamId);
-                ViewBag.ProgramId = new SelectList(db.Programs, "Id", "ShortName", studentInfo.ProgramId);
+                ViewBag.ExamId = new SelectList(db.Exams, "Id", "Name", vm.ExamId);
+                ViewBag.ProgramId = new SelectList(db.Programs, "Id", "ShortName", vm.ProgramId);
                 ViewBag.Message = "Submit Fail";
                 ViewBag.MessageColor = "text-danger";
-                return View(studentInfo);
+                return View(vm);
             }
 
-            ViewBag.Message = "Submit Valid Value";
+            ViewBag.Message = "Submit Valid Value and Image";
             ViewBag.MessageColor = "text-warning";
-            ViewBag.ExamId = new SelectList(db.Exams, "Id", "Name", studentInfo.ExamId);
-            ViewBag.ProgramId = new SelectList(db.Programs, "Id", "ShortName", studentInfo.ProgramId);
-            return View(studentInfo);
+            ViewBag.ExamId = new SelectList(db.Exams, "Id", "Name", vm.ExamId);
+            ViewBag.ProgramId = new SelectList(db.Programs, "Id", "ShortName", vm.ProgramId);
+            return View(vm);
         }
 
         // GET: StudentInfoes/Edit/5

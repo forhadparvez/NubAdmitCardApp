@@ -219,6 +219,10 @@
     <Compile Include="Migrations\202007191652561_StudentInfoTable.Designer.cs">
       <DependentUpon>202007191652561_StudentInfoTable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202007191840052_UpdateStudentTable.cs" />
+    <Compile Include="Migrations\202007191840052_UpdateStudentTable.Designer.cs">
+      <DependentUpon>202007191840052_UpdateStudentTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
@@ -239,6 +243,7 @@
       <DependentUpon>SectorReport.aspx</DependentUpon>
     </Compile>
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\StudentInfoVm.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />
@@ -249,6 +254,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Reports\image-icon.png" />
     <Content Include="Reports\logo.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -357,6 +363,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202007191652561_StudentInfoTable.resx">
       <DependentUpon>202007191652561_StudentInfoTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007191840052_UpdateStudentTable.resx">
+      <DependentUpon>202007191840052_UpdateStudentTable.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\AdmitCardReport.rdlc" />
   </ItemGroup>

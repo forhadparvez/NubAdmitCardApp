@@ -1,9 +1,10 @@
-﻿using System;
+﻿using App.Core.Entities;
 using System.ComponentModel.DataAnnotations;
+using System.Web;
 
-namespace App.Core.Entities
+namespace App.Mvc.ViewModels
 {
-    public class StudentInfo
+    public class StudentInfoVm
     {
         public long Id { get; set; }
 
@@ -34,14 +35,12 @@ namespace App.Core.Entities
         [EmailAddress]
         public string Email { get; set; }
 
-        public string ImageFilePath { get; set; }
-        public string PaymentFilePath { get; set; }
+        [Required]
+        [Display(Name = "Student Image")]
+        public HttpPostedFileBase StudentImageFile { get; set; }
 
-
-        public bool IsDelete { get; set; }
-        public string EditBy { get; set; }
-        public DateTime? EditDate { get; set; }
-        public string DeleteBy { get; set; }
-        public DateTime? DeleteDate { get; set; }
+        [Required]
+        [Display(Name = "Payment Image")]
+        public HttpPostedFileBase StudentPaymentFile { get; set; }
     }
 }
