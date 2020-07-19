@@ -1,0 +1,130 @@
+﻿@model App.Core.Entities.StudentInfo
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>StudentInfo</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Exam.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Exam.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Program.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Program.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Semester.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Semester.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IdNo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IdNo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ContactNo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ContactNo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ImageFilePath)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ImageFilePath)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PaymentFilePath)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PaymentFilePath)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsDelete)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsDelete)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EditBy)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EditBy)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EditDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EditDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DeleteBy)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DeleteBy)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DeleteDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DeleteDate)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

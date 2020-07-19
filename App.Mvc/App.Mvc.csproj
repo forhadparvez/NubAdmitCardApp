@@ -195,10 +195,33 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\StudentInfoesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202007191649346_InitialCreate.cs" />
+    <Compile Include="Migrations\202007191649346_InitialCreate.Designer.cs">
+      <DependentUpon>202007191649346_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202007191650299_ExamTable.cs" />
+    <Compile Include="Migrations\202007191650299_ExamTable.Designer.cs">
+      <DependentUpon>202007191650299_ExamTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202007191651196_ProgramTable.cs" />
+    <Compile Include="Migrations\202007191651196_ProgramTable.Designer.cs">
+      <DependentUpon>202007191651196_ProgramTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202007191652060_SemesterTable.cs" />
+    <Compile Include="Migrations\202007191652060_SemesterTable.Designer.cs">
+      <DependentUpon>202007191652060_SemesterTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202007191652561_StudentInfoTable.cs" />
+    <Compile Include="Migrations\202007191652561_StudentInfoTable.Designer.cs">
+      <DependentUpon>202007191652561_StudentInfoTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\ApplicationDbContext.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -291,6 +314,11 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\StudentInfoes\Create.cshtml" />
+    <Content Include="Views\StudentInfoes\Delete.cshtml" />
+    <Content Include="Views\StudentInfoes\Details.cshtml" />
+    <Content Include="Views\StudentInfoes\Edit.cshtml" />
+    <Content Include="Views\StudentInfoes\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -315,6 +343,21 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Migrations\202007191649346_InitialCreate.resx">
+      <DependentUpon>202007191649346_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007191650299_ExamTable.resx">
+      <DependentUpon>202007191650299_ExamTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007191651196_ProgramTable.resx">
+      <DependentUpon>202007191651196_ProgramTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007191652060_SemesterTable.resx">
+      <DependentUpon>202007191652060_SemesterTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007191652561_StudentInfoTable.resx">
+      <DependentUpon>202007191652561_StudentInfoTable.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Reports\AdmitCardReport.rdlc" />
   </ItemGroup>
   <PropertyGroup>
