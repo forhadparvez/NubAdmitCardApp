@@ -19,7 +19,7 @@ namespace App.Core.Entities
 
 
         public bool IsDelete { get; set; }
-        public bool ApproveBy { get; set; }
+        public string ApproveBy { get; set; }
         public DateTime ApproveDate { get; set; }
         public string DeleteBy { get; set; }
         public DateTime? DeleteDate { get; set; }

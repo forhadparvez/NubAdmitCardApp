@@ -4,8 +4,10 @@ using MessagingToolkit.QRCode.Codec;
 using Microsoft.Reporting.WebForms;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 
 namespace App.Mvc.Reports
 {
@@ -27,45 +29,55 @@ namespace App.Mvc.Reports
                 {
                     if (searchText != "")
                     {
-                        var studentId = Convert.ToInt64(searchText);
+                        var db = new ApplicationDbContext();
 
+                        var idNo = searchText;
 
-                        var admit = new AdmitCardQuery()
+                        var s = db.StudentInfos.Include(c => c.Exam).Include(c => c.Program).Include(c => c.Semester)
+                            .SingleOrDefault(c => c.IdNo == idNo);
+                        if (s != null)
                         {
-                            Id = 1,
-                            IdNo = "21170100527",
-                            Name = "Md. Forhad Parvez",
-                            Program = "Bachelor of Science in Computer Science and Engineering (ECSE)",
-                            Exam = "Mid",
-                            Semester = "Summer 2020",
-                            ContactNo = "01761024315",
-                            Email = "forhadparvez@outlook.com"
-                        };
+                            var approval = db.AdmitCardApprovals.Any(c => c.IsPaymentComplete && !c.IsDelete);
 
-                        // Image and QR
-                        var image = @"E:\PersonImage\1.jpg";
-                        admit.StudentImage = File.ReadAllBytes(image);
+                            if (approval)
+                            {
+                                var admit = new AdmitCardQuery()
+                                {
+                                    Id = s.Id,
+                                    IdNo = s.IdNo,
+                                    Name = s.Name,
+                                    Program = s.Program.Name + "(" + s.Program.ShortName + ")",
+                                    Exam = s.Exam.Name,
+                                    Semester = s.Semester.Name + " " + s.Semester.Year,
+                                    ContactNo = s.ContactNo,
+                                    Email = s.Email
+                                };
 
-                        var encoder = new QRCodeEncoder { QRCodeScale = 3 };
-                        var bmp = encoder.Encode("21170100527");
-                        admit.Qr = ImageToByte(bmp);
+                                // Image and QR
+                                var image = @"D" + s.ImageFilePath;
+                                admit.StudentImage = File.ReadAllBytes(image);
 
-                        var dataList = new List<AdmitCardQuery>
-                        {
-                            admit
-                        };
+                                var encoder = new QRCodeEncoder { QRCodeScale = 3 };
+                                var bmp = encoder.Encode(s.IdNo);
+                                admit.Qr = ImageToByte(bmp);
+
+                                var dataList = new List<AdmitCardQuery>
+                                {
+                                    admit
+                                };
 
 
-                        ReportViewer1.LocalReport.ReportPath = Server.MapPath("/Reports/AdmitCardReport.rdlc");
-                        ReportViewer1.LocalReport.DataSources.Clear();
+                                ReportViewer1.LocalReport.ReportPath = Server.MapPath("/Reports/AdmitCardReport.rdlc");
+                                ReportViewer1.LocalReport.DataSources.Clear();
 
-                        var rdc = new ReportDataSource("DataSet1", dataList);
-                        ReportViewer1.LocalReport.DataSources.Add(rdc);
+                                var rdc = new ReportDataSource("DataSet1", dataList);
+                                ReportViewer1.LocalReport.DataSources.Add(rdc);
 
-                        ReportViewer1.LocalReport.Refresh();
-                        ReportViewer1.DataBind();
+                                ReportViewer1.LocalReport.Refresh();
+                                ReportViewer1.DataBind();
+                            }
+                        }
                     }
-
                 }
             }
         }

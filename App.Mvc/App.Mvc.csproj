@@ -193,6 +193,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AdmitCardApprovalController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\StudentInfoesController.cs" />
@@ -222,6 +223,10 @@
     <Compile Include="Migrations\202007191840052_UpdateStudentTable.cs" />
     <Compile Include="Migrations\202007191840052_UpdateStudentTable.Designer.cs">
       <DependentUpon>202007191840052_UpdateStudentTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202007192057466_CreateAdmitCardApprovalTable.cs" />
+    <Compile Include="Migrations\202007192057466_CreateAdmitCardApprovalTable.Designer.cs">
+      <DependentUpon>202007192057466_CreateAdmitCardApprovalTable.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -325,9 +330,13 @@
     <Content Include="Views\StudentInfoes\Details.cshtml" />
     <Content Include="Views\StudentInfoes\Edit.cshtml" />
     <Content Include="Views\StudentInfoes\Index.cshtml" />
+    <Content Include="Views\StudentInfoes\PaymentStatusApproval.cshtml" />
+    <Content Include="Views\StudentInfoes\AdmitDownload.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="StudentInfoes\" />
+    <Folder Include="Views\AdmitCardApproval\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
@@ -366,6 +375,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202007191840052_UpdateStudentTable.resx">
       <DependentUpon>202007191840052_UpdateStudentTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007192057466_CreateAdmitCardApprovalTable.resx">
+      <DependentUpon>202007192057466_CreateAdmitCardApprovalTable.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\AdmitCardReport.rdlc" />
   </ItemGroup>

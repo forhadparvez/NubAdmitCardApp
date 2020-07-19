@@ -22,5 +22,7 @@ namespace App.Mvc.Models
 
 
         public DbSet<StudentInfo> StudentInfos { get; set; }
+
+        public DbSet<AdmitCardApproval> AdmitCardApprovals { get; set; }
     }
 }

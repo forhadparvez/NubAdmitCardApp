@@ -6,7 +6,7 @@
         <Source>Embedded</Source>
         <Value>logo</Value>
         <Sizing>FitProportional</Sizing>
-        <Top>0.48833in</Top>
+        <Top>0.49624in</Top>
         <Left>0.21354in</Left>
         <Height>0.98425in</Height>
         <Width>0.7874in</Width>
@@ -17,7 +17,7 @@
         </Style>
       </Image>
       <Line Name="Line1">
-        <Top>0.125in</Top>
+        <Top>0.13291in</Top>
         <Left>0.10292in</Left>
         <Height>0in</Height>
         <Width>6.79167in</Width>
@@ -30,7 +30,7 @@
         </Style>
       </Line>
       <Line Name="Line2">
-        <Top>4.75in</Top>
+        <Top>4.50791in</Top>
         <Left>0.10417in</Left>
         <Height>0in</Height>
         <Width>6.79167in</Width>
@@ -43,9 +43,9 @@
         </Style>
       </Line>
       <Line Name="Line3">
-        <Top>4.89083in</Top>
+        <Top>4.55499in</Top>
         <Left>6.89584in</Left>
-        <Height>-4.77374in</Height>
+        <Height>-4.42999in</Height>
         <Width>0in</Width>
         <ZIndex>3</ZIndex>
         <Style>
@@ -56,9 +56,9 @@
         </Style>
       </Line>
       <Line Name="Line4">
-        <Top>4.88292in</Top>
+        <Top>4.53666in</Top>
         <Left>0.125in</Left>
-        <Height>-4.76583in</Height>
+        <Height>-4.41166in</Height>
         <Width>0in</Width>
         <ZIndex>4</ZIndex>
         <Style>
@@ -88,7 +88,7 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox1</rd:DefaultName>
-        <Top>0.48833in</Top>
+        <Top>0.49624in</Top>
         <Left>1.02872in</Left>
         <Height>0.44792in</Height>
         <Width>4.86587in</Width>
@@ -123,7 +123,7 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox2</rd:DefaultName>
-        <Top>1.00917in</Top>
+        <Top>1.01708in</Top>
         <Left>2.29736in</Left>
         <Height>0.34375in</Height>
         <Width>1.74306in</Width>
@@ -153,10 +153,10 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>1.94667in</Top>
+        <Top>1.95458in</Top>
         <Left>0.2175in</Left>
         <Height>0.25in</Height>
-        <Width>1.03125in</Width>
+        <Width>1.11458in</Width>
         <ZIndex>7</ZIndex>
         <Style>
           <Border>
@@ -183,10 +183,10 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>1.625in</Top>
+        <Top>1.63291in</Top>
         <Left>0.21354in</Left>
         <Height>0.25in</Height>
-        <Width>1.03125in</Width>
+        <Width>1.11458in</Width>
         <ZIndex>8</ZIndex>
         <Style>
           <Border>
@@ -213,10 +213,10 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>2.58556in</Top>
+        <Top>2.59347in</Top>
         <Left>0.21552in</Left>
         <Height>0.25in</Height>
-        <Width>1.03125in</Width>
+        <Width>1.11458in</Width>
         <ZIndex>9</ZIndex>
         <Style>
           <Border>
@@ -243,10 +243,10 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>2.26611in</Top>
+        <Top>2.27402in</Top>
         <Left>0.2175in</Left>
         <Height>0.25in</Height>
-        <Width>1.03125in</Width>
+        <Width>1.11458in</Width>
         <ZIndex>10</ZIndex>
         <Style>
           <Border>
@@ -259,7 +259,7 @@
         </Style>
       </Textbox>
       <Line Name="Line5">
-        <Top>4.5in</Top>
+        <Top>4.25791in</Top>
         <Left>0.10417in</Left>
         <Height>0in</Height>
         <Width>6.79167in</Width>
@@ -278,7 +278,7 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value> Faculty of Science &amp; Engineering: Sher Tower, Holding #13, Road #17, Banani C/A, Dhaka-1213</Value>
+                <Value> Faculty of Science &amp; Engineering: Ashkona (Near Haji Camp), Dhaka</Value>
                 <Style />
               </TextRun>
             </TextRuns>
@@ -286,7 +286,7 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox7</rd:DefaultName>
-        <Top>4.50917in</Top>
+        <Top>4.26708in</Top>
         <Left>0.13417in</Left>
         <Height>0.25in</Height>
         <Width>6.69222in</Width>
@@ -318,7 +318,7 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>1.94667in</Top>
+        <Top>1.95458in</Top>
         <Left>1.35986in</Left>
         <Height>0.25in</Height>
         <Width>4.2118in</Width>
@@ -350,7 +350,7 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>1.625in</Top>
+        <Top>1.63291in</Top>
         <Left>1.3559in</Left>
         <Height>0.25in</Height>
         <Width>4.21576in</Width>
@@ -382,7 +382,7 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>2.58556in</Top>
+        <Top>2.59347in</Top>
         <Left>1.35788in</Left>
         <Height>0.25in</Height>
         <Width>5.43253in</Width>
@@ -414,7 +414,7 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>2.26611in</Top>
+        <Top>2.27402in</Top>
         <Left>1.35986in</Left>
         <Height>0.25in</Height>
         <Width>5.43055in</Width>
@@ -434,7 +434,7 @@
         <Value>=First(Fields!StudentImage.Value, "DataSet1")</Value>
         <MIMEType>image/jpeg</MIMEType>
         <Sizing>FitProportional</Sizing>
-        <Top>0.5in</Top>
+        <Top>0.50791in</Top>
         <Left>5.93625in</Left>
         <Height>0.98425in</Height>
         <Width>0.7874in</Width>
@@ -450,10 +450,10 @@
         <Value>=First(Fields!Qr.Value, "DataSet1")</Value>
         <MIMEType>image/jpeg</MIMEType>
         <Sizing>FitProportional</Sizing>
-        <Top>2.905in</Top>
+        <Top>2.91291in</Top>
         <Left>2.76958in</Left>
-        <Height>1in</Height>
-        <Width>1in</Width>
+        <Height>0.75in</Height>
+        <Width>0.75in</Width>
         <ZIndex>18</ZIndex>
         <Style>
           <Border>
@@ -496,7 +496,7 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>4.18625in</Top>
+        <Top>3.94416in</Top>
         <Left>0.2175in</Left>
         <Height>0.25in</Height>
         <Width>5.35416in</Width>
@@ -528,8 +528,8 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>3.94667in</Top>
-        <Left>2.50917in</Left>
+        <Top>3.70458in</Top>
+        <Left>2.38417in</Left>
         <Height>0.25in</Height>
         <Width>1.53125in</Width>
         <ZIndex>20</ZIndex>
@@ -544,12 +544,12 @@
         </Style>
       </Textbox>
     </ReportItems>
-    <Height>5in</Height>
+    <Height>4.69541in</Height>
     <Style />
   </Body>
   <Width>7.06625in</Width>
   <Page>
-    <PageHeight>6.4in</PageHeight>
+    <PageHeight>5.8in</PageHeight>
     <PageWidth>8.27in</PageWidth>
     <LeftMargin>0.5in</LeftMargin>
     <RightMargin>0.5in</RightMargin>

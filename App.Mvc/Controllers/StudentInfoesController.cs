@@ -23,6 +23,46 @@ namespace App.Mvc.Controllers
             return View(await studentInfos.ToListAsync());
         }
 
+        [AllowAnonymous]
+        public async Task<ActionResult> PaymentStatusApproval()
+        {
+            string root = Server.MapPath("~");
+            var outputPath = root + @"StudentInfoes";
+            if (Directory.Exists(outputPath))
+            {
+                var di = new DirectoryInfo(outputPath);
+                foreach (var file in di.GetFiles())
+                {
+                    file.Delete();
+                }
+            }
+            else
+            {
+                Directory.CreateDirectory(outputPath);
+            }
+
+            var studentInfos = db.StudentInfos.Include(s => s.Exam).Include(s => s.Program).Include(s => s.Semester).Where(c => !c.IsDelete);
+            foreach (var s in studentInfos)
+            {
+
+
+                var link = "D" + s.PaymentFilePath;
+                var sourchFile = Path.Combine(link);
+                var tergetPath = Path.Combine(root + @"\StudentInfoes", s.Id + ".jpg");
+
+                System.IO.File.Copy(sourchFile, tergetPath, true);
+                s.ImageFilePath = s.Id + ".jpg";
+            }
+            return View(await studentInfos.ToListAsync());
+        }
+
+        [AllowAnonymous]
+        public ActionResult AdmitDownload()
+        {
+            return View();
+        }
+
+
         // GET: StudentInfoes/Details/5
         public async Task<ActionResult> Details(long? id)
         {
@@ -223,9 +263,9 @@ namespace App.Mvc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(long id)
         {
-            StudentInfo studentInfo = await db.StudentInfos.FindAsync(id);
-            db.StudentInfos.Remove(studentInfo);
-            await db.SaveChangesAsync();
+            //StudentInfo studentInfo = await db.StudentInfos.FindAsync(id);
+            //db.StudentInfos.Remove(studentInfo);
+            //await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 
