@@ -278,7 +278,7 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value> Faculty of Science &amp; Engineering: Ashkona (Near Haji Camp), Dhaka</Value>
+                <Value> Faculty of Science &amp; Engineering: 111/2 Kawla Jamea Mosjid Road, Dakshin Khan, Uttra, Dhaka</Value>
                 <Style />
               </TextRun>
             </TextRuns>
@@ -533,6 +533,38 @@
         <Height>0.25in</Height>
         <Width>1.53125in</Width>
         <ZIndex>20</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox14">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>Controller of Examinations</Value>
+                <Style />
+              </TextRun>
+            </TextRuns>
+            <Style>
+              <TextAlign>Center</TextAlign>
+            </Style>
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox14</rd:DefaultName>
+        <Top>3.66291in</Top>
+        <Left>4.99874in</Left>
+        <Height>0.25in</Height>
+        <Width>1.79167in</Width>
+        <ZIndex>21</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>

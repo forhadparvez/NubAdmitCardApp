@@ -21,7 +21,7 @@ namespace App.Mvc.ViewModels
         public byte ExamId { get; set; }
 
         [Required]
-        [Display(Name = "ID No")]
+        [Display(Name = "Student ID")]
         public string IdNo { get; set; }
 
         [Required]
@@ -36,11 +36,11 @@ namespace App.Mvc.ViewModels
         public string Email { get; set; }
 
         [Required]
-        [Display(Name = "Student Image")]
+        [Display(Name = "Student Photo")]
         public HttpPostedFileBase StudentImageFile { get; set; }
 
         [Required]
-        [Display(Name = "Payment Image")]
+        [Display(Name = "Payment Screenshot")]
         public HttpPostedFileBase StudentPaymentFile { get; set; }
     }
 }

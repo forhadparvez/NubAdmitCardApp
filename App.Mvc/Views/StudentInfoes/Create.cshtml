@@ -6,7 +6,7 @@
 
 <div class="col-md-12 col-sm-12">
     <div class="panel panel-info">
-        <div class="panel-heading">Student Registration</div>
+        <div class="panel-heading">Registration for Admit</div>
         <div class="panel-body">
             <div class="row">
                 <div class="col-md-offset-1 col-md-10 col-sm-12">
@@ -44,7 +44,7 @@
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.IdNo, htmlAttributes: new { @class = "control-label col-md-3" })
                                     <div class="col-md-9">
-                                        @Html.EditorFor(model => model.IdNo, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.EditorFor(model => model.IdNo, new { htmlAttributes = new { @class = "form-control", placeholder = "Example: 21170100501" } })
                                         @Html.ValidationMessageFor(model => model.IdNo, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
@@ -75,7 +75,7 @@
                             </div>
                             <div class="col-md-6 col-sm-12">
                                 <div class="form-group">
-                                    <label class="control-label">Student Image</label><br />
+                                    <label class="control-label">Student Photo</label><br />
                                     <img id="imageView1" class="img-thumbnail" src="~/Reports/image-icon.png" alt="Student Image" height="100px" width="90px" />
                                     @Html.TextBoxFor(model => model.StudentImageFile, new { @type = "file", onchange = "readURL1(this);" })
                                     @Html.ValidationMessageFor(model => model.StudentImageFile, "", new { @class = "text-danger" })
@@ -83,7 +83,7 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label class="control-label">Payment Image</label><br />
+                                    <label class="control-label">Payment Screenshot</label><br />
                                     <img id="imageView2" class="img-thumbnail" src="~/Reports/image-icon.png" alt="Payment Image" height="100px" width="90px" />
                                     @Html.TextBoxFor(model => model.StudentPaymentFile, new { @type = "file", onchange = "readURL2(this);" })
                                     @Html.ValidationMessageFor(model => model.StudentPaymentFile, "", new { @class = "text-danger" })

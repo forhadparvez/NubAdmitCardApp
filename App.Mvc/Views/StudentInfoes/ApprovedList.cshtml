@@ -1,0 +1,67 @@
+﻿@model IEnumerable<App.Core.Entities.StudentInfo>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<table id="myTable" class="table">
+    <thead>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Program.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Semester.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IdNo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ContactNo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Email)
+        </th>
+    </tr>
+    </thead>
+    <tbod>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Program.ShortName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Semester.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IdNo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ContactNo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+            </tr>
+        }
+    </tbod>
+</table>
+
+@section scripts
+{
+    <script src="~/Scripts/DataTables/jquery.dataTables.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#myTable').DataTable();
+    
+        });
+    </script>
+
+}

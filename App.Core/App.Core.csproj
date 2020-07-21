@@ -52,6 +52,7 @@
     <Compile Include="Entities\StudentInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Query\AdmitCardQuery.cs" />
+    <Compile Include="Query\PaymentStatusApprovalQuery.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

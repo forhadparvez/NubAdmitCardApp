@@ -1,8 +1,16 @@
-﻿using App.Core.Entities;
+﻿using App.Core.Application;
+using App.Core.Command;
+using App.Core.Entities;
+using App.Core.Query;
 using App.Mvc.Models;
 using App.Mvc.ViewModels;
+using MessagingToolkit.QRCode.Codec;
+using Microsoft.Reporting.WebForms;
 using System;
+using System.Collections.Generic;
 using System.Data.Entity;
+using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -17,13 +25,21 @@ namespace App.Mvc.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: StudentInfoes
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> ApprovedList()
         {
-            var studentInfos = db.StudentInfos.Include(s => s.Exam).Include(s => s.Program).Include(s => s.Semester).Where(c => !c.IsDelete);
-            return View(await studentInfos.ToListAsync());
+            var stdresult = new List<StudentInfo>();
+
+            var studentInfos = await db.StudentInfos.Include(s => s.Exam).Include(s => s.Program).Include(s => s.Semester).Where(c => !c.IsDelete).ToListAsync();
+            foreach (var std in studentInfos)
+            {
+                var isExist = db.AdmitCardApprovals.Any(c => c.StudentInfoId == std.Id && !c.IsDelete);
+                if (isExist)
+                    stdresult.Add(std);
+            }
+
+            return View(stdresult);
         }
 
-        [AllowAnonymous]
         public async Task<ActionResult> PaymentStatusApproval()
         {
             string root = Server.MapPath("~");
@@ -41,26 +57,211 @@ namespace App.Mvc.Controllers
                 Directory.CreateDirectory(outputPath);
             }
 
-            var studentInfos = db.StudentInfos.Include(s => s.Exam).Include(s => s.Program).Include(s => s.Semester).Where(c => !c.IsDelete);
-            foreach (var s in studentInfos)
+            var stdresult = new List<StudentInfo>();
+
+            var studentInfos = await db.StudentInfos.Include(s => s.Exam).Include(s => s.Program).Include(s => s.Semester).Where(c => !c.IsDelete).ToListAsync();
+            foreach (var std in studentInfos)
             {
+                var isExist = db.AdmitCardApprovals.Any(c => c.StudentInfoId == std.Id && !c.IsDelete);
+                if (!isExist)
+                    stdresult.Add(std);
+            }
 
 
-                var link = "D" + s.PaymentFilePath;
+            return View(stdresult);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetDetails(long stdId)
+        {
+            string root = Server.MapPath("~");
+            var outputPath = root + @"StudentInfoes";
+            if (Directory.Exists(outputPath))
+            {
+                var di = new DirectoryInfo(outputPath);
+                foreach (var file in di.GetFiles())
+                {
+                    file.Delete();
+                }
+            }
+            else
+            {
+                Directory.CreateDirectory(outputPath);
+            }
+
+
+
+            var std = await db.StudentInfos.Include(s => s.Exam).Include(s => s.Program).Include(s => s.Semester).SingleOrDefaultAsync(c => !c.IsDelete && c.Id == stdId);
+
+            if (std != null)
+            {
+                var result = new PaymentStatusApprovalQuery()
+                {
+                    Id = std.Id,
+                    IdNo = std.IdNo,
+                    Name = std.Name
+                };
+
+
+                var request = await db.AdmitCardRequests.SingleOrDefaultAsync(c => !c.IsDone && c.StudentInfoId == std.Id);
+                if (request != null)
+                {
+                    result.RequestId = request.Id.ToString();
+                    result.RequestedDate = DateTimeFormatter.DateToString(request.RequestedDate);
+                    request.Comment = request.Comment;
+                }
+
+                var link = "D" + std.PaymentFilePath;
                 var sourchFile = Path.Combine(link);
-                var tergetPath = Path.Combine(root + @"\StudentInfoes", s.Id + ".jpg");
+                var tergetPath = Path.Combine(root + @"\StudentInfoes", std.Id + ".jpg");
 
                 System.IO.File.Copy(sourchFile, tergetPath, true);
-                s.ImageFilePath = s.Id + ".jpg";
+                result.PaymentFilePath = std.Id + ".jpg";
+
+
+                var request2 = await db.AdmitCardRequests.Where(c => c.IsDone && c.Status).ToListAsync();
+                foreach (var r in request2)
+                {
+                    result.PreviousPermission += "Till: " + DateTimeFormatter.DateToString(r.RequestedDate) + ", ";
+                }
+
+
+                return Json(result, JsonRequestBehavior.AllowGet);
             }
-            return View(await studentInfos.ToListAsync());
+
+            return Json(0, JsonRequestBehavior.AllowGet);
         }
+
+
+
 
         [AllowAnonymous]
         public ActionResult AdmitDownload()
         {
             return View();
         }
+
+
+        public static byte[] ImageToByte(Image img)
+        {
+            ImageConverter converter = new ImageConverter();
+            return (byte[])converter.ConvertTo(img, typeof(byte[]));
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public JsonResult AdmitDownload(AdmitCardRequestCommand vm)
+        {
+
+            CultureInfo cInfo = new CultureInfo("en-IN");
+            ReportViewer viewer = new ReportViewer();
+
+
+
+            var context = new ApplicationDbContext();
+
+            // data source
+            var db = new ApplicationDbContext();
+
+            var idNo = vm.IdNo;
+
+            var s = db.StudentInfos.Include(c => c.Exam).Include(c => c.Program).Include(c => c.Semester)
+                .SingleOrDefault(c => c.IdNo == idNo);
+            if (s != null)
+            {
+                var approval = db.AdmitCardApprovals.Any(c => c.IsPaymentComplete && !c.IsDelete && !c.IsPrevious && c.StudentInfoId == s.Id);
+                var isSpecial = db.AdmitCardApprovals.Any(c => c.IsSpecialPermission && !c.IsDelete && !c.IsPrevious && c.StudentInfoId == s.Id);
+
+                var admit = new AdmitCardQuery();
+                if (approval)
+                {
+                    string path = Path.Combine(Server.MapPath("~/Reports"), "AdmitCardReport.rdlc");
+                    viewer.LocalReport.ReportPath = path;
+
+                    admit.Id = s.Id;
+                    admit.IdNo = s.IdNo;
+                    admit.Name = s.Name;
+                    admit.Program = s.Program.Name + "(" + s.Program.ShortName + ")";
+                    admit.Exam = s.Exam.Name;
+                    admit.Semester = s.Semester.Name + " " + s.Semester.Year;
+                    admit.ContactNo = s.ContactNo;
+                    admit.Email = s.Email;
+                }
+
+                if (isSpecial)
+                {
+                    string path = Path.Combine(Server.MapPath("~/Reports"), "DueAdmitCardReport.rdlc");
+                    viewer.LocalReport.ReportPath = path;
+
+                    var special = db.AdmitCardApprovals.SingleOrDefault(c =>
+                        c.IsSpecialPermission && !c.IsDelete && !c.IsPrevious && c.StudentInfoId == s.Id);
+                    admit.Id = s.Id;
+                    admit.IdNo = s.IdNo;
+                    admit.Name = s.Name;
+                    admit.Program = s.Program.Name + "(" + s.Program.ShortName + ")";
+                    admit.Exam = s.Exam.Name;
+                    admit.Semester = s.Semester.Name + " " + s.Semester.Year;
+                    admit.ContactNo = DateTimeFormatter.DateToString(special.ExceptedDate);
+                    admit.Email = s.Email;
+                }
+                // Image and QR
+                var image = @"D" + s.ImageFilePath;
+                admit.StudentImage = System.IO.File.ReadAllBytes(image);
+
+                var encoder = new QRCodeEncoder { QRCodeScale = 3 };
+                var bmp = encoder.Encode(s.IdNo);
+                admit.Qr = ImageToByte(bmp);
+
+                var dataList = new List<AdmitCardQuery>
+                                {
+                                    admit
+                                };
+
+
+                var rds = new ReportDataSource("DataSet1", dataList);
+                viewer.LocalReport.DataSources.Add(rds);
+
+
+                Warning[] warnings;
+                string[] streamIds;
+                string mimeType = string.Empty;
+                string encoding = string.Empty;
+                string extension = string.Empty;
+
+                byte[] bytes = viewer.LocalReport.Render("PDF", null, out mimeType, out encoding, out extension,
+                    out streamIds, out warnings);
+
+
+                string fileName = s.IdNo;
+                string outputPath = "~/PdfReports/";
+                if (Directory.Exists(Server.MapPath(outputPath)))
+                {
+                    var files = Directory.GetFiles(Server.MapPath(outputPath));
+                    foreach (var f in files)
+                    {
+                        System.IO.File.Delete(f);
+                    }
+                }
+                else
+                {
+                    Directory.CreateDirectory(Server.MapPath(outputPath));
+
+                }
+
+                using (var stream = System.IO.File.Create(Path.Combine(Server.MapPath(outputPath), fileName + ".pdf")))
+                {
+                    stream.Write(bytes, 0, bytes.Length);
+                }
+
+                var pdfHref = "/PdfReports/" + fileName + ".pdf";
+
+                return Json(pdfHref, JsonRequestBehavior.AllowGet);
+
+            }
+
+            return Json(0, JsonRequestBehavior.AllowGet);
+        }
+
 
 
         // GET: StudentInfoes/Details/5
@@ -199,9 +400,10 @@ namespace App.Mvc.Controllers
                     ViewBag.ProgramId = new SelectList(db.Programs, "Id", "ShortName", vm.ProgramId);
                     ViewBag.Message = "This ID No. Already in Database";
                     ViewBag.MessageColor = "text-danger";
+                    return View();
                 }
-                
-                
+
+
                 ViewBag.ExamId = new SelectList(db.Exams, "Id", "Name", vm.ExamId);
                 ViewBag.ProgramId = new SelectList(db.Programs, "Id", "ShortName", vm.ProgramId);
                 ViewBag.Message = "Submit Fail";

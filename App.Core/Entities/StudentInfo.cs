@@ -20,7 +20,7 @@ namespace App.Core.Entities
         public byte ExamId { get; set; }
 
         [Required]
-        [Display(Name = "ID No")]
+        [Display(Name = "Student ID")]
         public string IdNo { get; set; }
 
         [Required]

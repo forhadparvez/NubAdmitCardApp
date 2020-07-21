@@ -5,46 +5,53 @@
 
 <div class="col-md-12 col-sm-12">
     <div class="panel panel-info">
-        <div class="panel-heading">Student Admit Request</div>
+        <div class="panel-heading">Special Exam Permission</div>
         <div class="panel-body">
             <div class="row">
               @using (Html.BeginForm("Create","AdmitCardRequest"))
                 {
                     <div class="form-horizontal">
                         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                            
-                        <div class="col-md-offset-3 col-md-6 col-sm-12">
+                           
+                        <div class="col-md-offset-2 col-md-9 col-sm-12">
                             <div class="form-group">
-                                @Html.LabelFor(model => model.IdNo, htmlAttributes: new { @class = "control-label col-md-3" })
+                                <label class="control-label">
+                                    NOTE: Before Apply for Permission, Please make sure you have Registered for Admit Card.
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-offset-2 col-md-8 col-sm-12">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.IdNo, htmlAttributes: new {@class = "control-label col-md-3"})
                                 <div class="col-md-9">
-                                    @Html.EditorFor(model => model.IdNo, new { htmlAttributes = new { @class = "form-control" } })
-                                    @Html.ValidationMessageFor(model => model.IdNo, "", new { @class = "text-danger" })
+                                    @Html.EditorFor(model => model.IdNo, new {htmlAttributes = new {@class = "form-control", placeholder = "Example: 21170100501"}})
+                                    @Html.ValidationMessageFor(model => model.IdNo, "", new {@class = "text-danger"})
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                @Html.LabelFor(model => model.RequestedDate, htmlAttributes: new { @class = "control-label col-md-3" })
+                                @Html.LabelFor(model => model.RequestedDate, htmlAttributes: new {@class = "control-label col-md-3"})
                                 <div class="col-md-9">
-                                    @Html.EditorFor(model => model.RequestedDate, new { htmlAttributes = new { @class = "form-control" } })
-                                    @Html.ValidationMessageFor(model => model.RequestedDate, "", new { @class = "text-danger" })
+                                    @Html.EditorFor(model => model.RequestedDate, new {htmlAttributes = new {@class = "form-control"}})
+                                    @Html.ValidationMessageFor(model => model.RequestedDate, "", new {@class = "text-danger"})
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                @Html.LabelFor(model => model.Comment, htmlAttributes: new { @class = "control-label col-md-3" })
+                                @Html.LabelFor(model => model.Comment, htmlAttributes: new {@class = "control-label col-md-3"})
                                 <div class="col-md-9">
-                                    @Html.EditorFor(model => model.Comment, new { htmlAttributes = new { @class = "form-control" } })
-                                    @Html.ValidationMessageFor(model => model.Comment, "", new { @class = "text-danger" })
+                                    @Html.EditorFor(model => model.Comment, new {htmlAttributes = new {@class = "form-control"}})
+                                    @Html.ValidationMessageFor(model => model.Comment, "", new {@class = "text-danger"})
                                 </div>
                             </div>
-                            
+
                             <div class="form-group">
                                 <div class="col-md-offset-3 col-md-9">
-                                    <input type="submit" value="Submit" class="btn btn-primary" />
+                                    <input type="submit" value="Submit" class="btn btn-primary"/>
                                     <label class="control-label @ViewBag.MessageColor">@ViewBag.Message</label>
                                 </div>
-                                </div>
                             </div>
+                        </div>
                     </div>
                 }
             </div>

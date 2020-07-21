@@ -6,6 +6,7 @@
     <title>@ViewBag.Title - NUB</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+<link href="~/Content/DataTables/css/jquery.dataTables.min.css" rel="stylesheet" />
     <link href="~/Content/jquery-ui.css" rel="stylesheet" />
 
 </head>
@@ -24,15 +25,15 @@
                 <ul class="nav navbar-nav">
                     @if (!User.Identity.IsAuthenticated)
                     {
-                        <li>@Html.ActionLink("Download Admit", "AdmitDownload", "StudentInfoes")</li>
-                        <li>@Html.ActionLink("Registration", "Create", "StudentInfoes")</li>
-                        <li>@Html.ActionLink("Due Payment Request", "Create", "AdmitCardRequest")</li>
-
+                        <li>@Html.ActionLink("Registration for Admit", "Create", "StudentInfoes")</li>
+                        <li>@Html.ActionLink("Special Exam Permission", "Create", "AdmitCardRequest")</li>
+                        <li>@Html.ActionLink("Download Admit Card", "AdmitDownload", "StudentInfoes")</li>
                     }
                     else
                     {
                         <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                        <li>@Html.ActionLink("Approval", "PaymentStatusApproval", "StudentInfoes")</li>
+                        <li>@Html.ActionLink("Pending Request", "PaymentStatusApproval", "StudentInfoes")</li>
+                        <li>@Html.ActionLink("Approved List", "ApprovedList", "StudentInfoes")</li>
                     }
                 </ul>
                 @Html.Partial("_LoginPartial")

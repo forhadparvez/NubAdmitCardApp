@@ -1,52 +1,76 @@
-﻿@{
-    ViewBag.Title = "Report";
+﻿@model App.Core.Command.AdmitCardRequestCommand
 
-}
+    @{
+        ViewBag.Title = "Report";
 
-<div class="panel panel-info">
-    <div class="panel-heading">Admit Card Download</div>
-    <div class="panel-body">
-        <div class="row">
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label class="control-label">ID No.</label>
-                    <input id="idNo" class="form-control"/>
+    }
+    @using (Ajax.BeginForm("AdmitDownload", "StudentInfoes", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnFailure = "OnFailure" }))
+    {
+        <div class="panel panel-info">
+            <div class="panel-heading">Download Admit Card</div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="control-label">
+                                NOTE: Before download, Please make sure you have Registered for Admit Card.
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.IdNo, htmlAttributes: new {@class = "control-label "})
+                            @Html.EditorFor(model => model.IdNo, new {htmlAttributes = new {@class = "form-control", placeholder = "Example: 21170100501"}})
+                            @Html.ValidationMessageFor(model => model.IdNo, "", new {@class = "text-danger"})
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" id="btnSearch" class="btn btn-primary ">Download Admit</button>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <a id="pdf" class="hidden" runat="server">click me</a>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <button type="button" id="btnSearch" class="btn btn-primary ">Get Report</button>
+                <div class="row" id="divReport">
+
                 </div>
             </div>
-            <div class="col-md-8">
-
-            </div>
         </div>
+    }
+    
 
-        <div class="row" id="divReport">
+    @section Scripts {
+        <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
 
-        </div>
-    </div>
-</div>
-
-@section Scripts {
-    <script>
-
-        $(function () {
-            $('#btnSearch').click(function () {
-
-                var searchText = $("#idNo").val();
-
-                //ASPX page URL to load report
-                var src = '/Reports/SectorReport.aspx?';
-                //We can add parameters here
-                src = src + "searchText=" + searchText;
+        <script type="text/javascript">
+            function OnSuccess(data) {
+                window.open(data, '_blank');
+            }
+            function OnFailure(data) {
+                alert("Report Fail.");
+            }
 
 
-                //Create a dynamic iframe here and append this to div tag
-                var iframe = '<iframe id="reportFrame" width="100%" height="400px" scrolling="no" frameborder="0" src="' + src + '" allowfullscreen></iframe>';
-                $("#divReport").html(iframe);
-            });
-        });
+            //$(function () {
+            //    $('#btnSearch').click(function () {
 
-    </script>
-}
+            //        var searchText = $("#IdNo").val();
+
+            //        //ASPX page URL to load report
+            //        var src = '/Reports/SectorReport.aspx?';
+            //        //We can add parameters here
+            //        src = src + "searchText=" + searchText;
+
+
+            //        //Create a dynamic iframe here and append this to div tag
+            //        var iframe = '<iframe id="reportFrame" width="100%" height="400px" scrolling="no" frameborder="0" src="' + src + '" allowfullscreen></iframe>';
+            //        $("#divReport").html(iframe);
+            //    });
+            //});
+
+        </script>
+    }

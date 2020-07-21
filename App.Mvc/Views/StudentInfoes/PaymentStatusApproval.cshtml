@@ -3,15 +3,19 @@
 @{
     ViewBag.Title = "Index";
 }
-    <div class="col-md-12 col-sm-12">
-        <div class="panel panel-info">
-            <div class="panel-heading">Admit Card Approval</div>
-            <div class="panel-body">
-                <table class="table">
+<div class="col-md-12 col-sm-12">
+    <div class="panel panel-info">
+        <div class="panel-heading">Admit Card Approval</div>
+        <div class="panel-body">
+            <table id="myTable" class="table">
+                <thead>
                     <tr>
                         <th>
                             @Html.DisplayNameFor(model => model.IdNo)
                         </th>
+                        <td>
+                            @Html.DisplayNameFor(model => model.Program)
+                        </td>
                         <th>
                             @Html.DisplayNameFor(model => model.Name)
                         </th>
@@ -21,15 +25,19 @@
                         <th>
                             @Html.DisplayNameFor(model => model.Email)
                         </th>
-                        <th>Payment Image</th>
-                        <th></th>
+                        <th>Details</th>
                     </tr>
-
+                </thead>
+                <tbody>
                     @foreach (var item in Model)
                     {
                         <tr>
+
                             <td>
                                 @Html.DisplayFor(modelItem => item.IdNo)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Program.ShortName)
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.Name)
@@ -41,31 +49,115 @@
                                 @Html.DisplayFor(modelItem => item.Email)
                             </td>
                             <td>
-                                <img src="@item.ImageFilePath" width="100px" height="100px" />
-                            </td>
-                            <td>
-                                <a class="js-approve btn btn-primary" data-id="@item.Id">Approve</a>
+                                <a class="js-detail btn btn-primary" data-id="@item.Id">Detail</a>
                             </td>
                         </tr>
                     }
-
-                </table>
-            </div>
+                </tbody>
+            </table>
         </div>
     </div>
+</div>
 
-        
+
+
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+
+        <!-- Modal content-->
+        <div class="modal-content" id="rvQuestionList">
+            <div class="modal-header">
+                <div class="col-md-5">Student Detail</div>
+                <div class="col-md-2">
+                    <a class="btn btn-primary btn-block" id="btnApprove">Approve</a>
+                </div>
+                <div class="col-md-2">
+                    <a class="btn btn-primary btn-block" id="btnDue">Due Approve</a>
+                </div>
+                <div class="col-md-2">
+                    <a class="btn btn-warning btn-block" id="btnReject">Due Reject</a>
+                </div>
+                <div class="col-md-1">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="Id" />
+                <input type="hidden" id="RequestId" />
+                <label>Student Id: </label><label id="idNo"></label><br />
+                <label>Name: </label><label id="Name"></label><br />
+                <label>Requested Date: </label><input id="RequestedDate" /><br />
+                <label>Comment: </label><label id="Comment"></label><br />
+                <label>PreviousPermission: </label><label id="PreviousPermission"></label><br />
+
+                <img id="paymentImage" width="95%" height="350px" />
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
 @section scripts
 {
+    <script src="~/Scripts/DataTables/jquery.dataTables.min.js"></script>
+    <script src="~/Scripts/jquery-ui.js"></script>
     <script type="text/javascript">
-        $(document.body).on("click", ".js-approve", function() {
+        $(document).ready(function () {
+            $('#myTable').DataTable();
+            $("#RequestedDate").datepicker({ dateFormat: 'dd-mm-yy' });;
+        });
+
+        $(document.body).on("click", ".js-detail", function () {
             var button = $(this);
             var id = button.attr("data-id");
 
+            $.get("/StudentInfoes/GetDetails?stdId=" + id,
+                function (r) {
+
+                    $("#Id").val(r.Id);
+                    $("#idNo").text(r.IdNo);
+                    $("#Name").text(r.Name);
+                    $("#RequestId").val(r.RequestId);
+
+                    $("#RequestedDate").val(r.RequestedDate);
+                    $("#Comment").text(r.Comment);
+                    $("#PreviousPermission").text(r.PreviousPermission);
+
+                    $("#paymentImage").attr("src", r.PaymentFilePath);
+
+                    $('#myModal').modal('show');
+
+                });
+        });
+
+
+        $(document.body).on("click", "#btnApprove", function () {
+           
+            var id = $("#Id").val();
+
             $.get("/AdmitCardApproval/GiveApproval?stdId=" + id,
-                function(r) {
+                function (r) {
                     if (r > 0)
-                        alert("Successfully Approved");
+                        location.reload();
+                });
+        });
+
+        $(document.body).on("click", "#btnDue", function () {
+            
+            var id = $("#Id").val();
+            var r = $("#RequestId").val();
+            var d=$("#RequestedDate").val();
+
+            $.get("/AdmitCardApproval/DueApproval?stdId=" + id + "&requestId=" + r +"&date="+d,
+                function (r) {
+                    if (r > 0)
+                        location.reload();
                 });
         });
     </script>
