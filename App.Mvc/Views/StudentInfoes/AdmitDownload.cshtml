@@ -48,7 +48,14 @@
 
         <script type="text/javascript">
             function OnSuccess(data) {
-                window.open(data, '_blank');
+                if (data == "0")
+                    alert("Please Registration for Admit Card");
+                else if (data == "00")
+                    alert("Your Request Is Pending For Approval.");
+                else {
+                    window.open(data, '_blank');
+                }
+                
             }
             function OnFailure(data) {
                 alert("Report Fail.");

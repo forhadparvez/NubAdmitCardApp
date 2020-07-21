@@ -14,19 +14,20 @@ namespace App.Mvc.Controllers
         // GET: AdmitCardApproval
         public JsonResult GiveApproval(long stdId)
         {
-            var stds = db.AdmitCardApprovals.Where(c => c.StudentInfoId == stdId);
-            foreach (var std in stds)
+            var user = User.Identity.Name;
+
+            var li = db.AdmitCardApprovals.Where(c => c.StudentInfoId == stdId);
+            foreach (var ap in li)
             {
-                std.IsPrevious = true;
+                ap.IsPrevious = true;
             }
             db.SaveChanges();
-
-            var user = User.Identity.Name;
 
             var a = new AdmitCardApproval()
             {
                 StudentInfoId = stdId,
                 IsPaymentComplete = true,
+                IsPrevious = true,
                 ApproveBy = user,
                 ApproveDate = DateTime.Now
             };
@@ -40,10 +41,18 @@ namespace App.Mvc.Controllers
 
         public JsonResult DueApproval(long stdId, long requestId, string date)
         {
-            var stds = db.AdmitCardApprovals.Where(c => c.StudentInfoId == stdId);
+            var li = db.AdmitCardApprovals.Where(c => c.StudentInfoId == stdId);
+            foreach (var ap in li)
+            {
+                ap.IsPrevious = true;
+            }
+            db.SaveChanges();
+
+            var stds = db.AdmitCardRequests.Where(c => c.Id == requestId);
             foreach (var std in stds)
             {
-                std.IsPrevious = true;
+                std.IsDone = true;
+                std.Status = true;
             }
             db.SaveChanges();
 
@@ -54,6 +63,7 @@ namespace App.Mvc.Controllers
                 ExceptedDate = DateTimeFormatter.StringToDate(date),
                 IsSpecialPermission = true,
                 Comments = "",
+                IsPrevious = true,
                 ApproveBy = user,
                 ApproveDate = DateTime.Now
             };

@@ -59,11 +59,16 @@ namespace App.Mvc.Controllers
 
             var stdresult = new List<StudentInfo>();
 
-            var studentInfos = await db.StudentInfos.Include(s => s.Exam).Include(s => s.Program).Include(s => s.Semester).Where(c => !c.IsDelete).ToListAsync();
+            var studentInfos = await db.StudentInfos.Include(s => s.Exam).Include(s => s.Program).Include(s => s.Semester)
+                .Where(c => !c.IsDelete).ToListAsync();
             foreach (var std in studentInfos)
             {
-                var isExist = db.AdmitCardApprovals.Any(c => c.StudentInfoId == std.Id && !c.IsDelete);
-                if (!isExist)
+                var isExist = db.AdmitCardApprovals.Any(c => c.StudentInfoId == std.Id && c.IsPaymentComplete && !c.IsDelete);
+                var isExist2 = db.AdmitCardRequests.Any(c => c.StudentInfoId == std.Id && !c.IsDone);
+                var isExist3 = db.AdmitCardApprovals.Any(c => c.StudentInfoId == std.Id);
+                if (!isExist && isExist2)
+                    stdresult.Add(std);
+                else if (!isExist3)
                     stdresult.Add(std);
             }
 
@@ -108,7 +113,7 @@ namespace App.Mvc.Controllers
                 {
                     result.RequestId = request.Id.ToString();
                     result.RequestedDate = DateTimeFormatter.DateToString(request.RequestedDate);
-                    request.Comment = request.Comment;
+                    result.Comment = request.Comment;
                 }
 
                 var link = "D" + std.PaymentFilePath;
@@ -166,11 +171,15 @@ namespace App.Mvc.Controllers
             var idNo = vm.IdNo;
 
             var s = db.StudentInfos.Include(c => c.Exam).Include(c => c.Program).Include(c => c.Semester)
-                .SingleOrDefault(c => c.IdNo == idNo);
+                .SingleOrDefault(c => c.IdNo == idNo && !c.IsDelete);
             if (s != null)
             {
-                var approval = db.AdmitCardApprovals.Any(c => c.IsPaymentComplete && !c.IsDelete && !c.IsPrevious && c.StudentInfoId == s.Id);
+                var approval = db.AdmitCardApprovals.Any(c => c.IsPaymentComplete && !c.IsDelete && c.StudentInfoId == s.Id);
                 var isSpecial = db.AdmitCardApprovals.Any(c => c.IsSpecialPermission && !c.IsDelete && !c.IsPrevious && c.StudentInfoId == s.Id);
+                var isPending = db.AdmitCardRequests.Any(c => !c.IsDone && c.StudentInfoId == s.Id);
+
+                if (isPending)
+                    return Json("00", JsonRequestBehavior.AllowGet);
 
                 var admit = new AdmitCardQuery();
                 if (approval)
@@ -259,7 +268,7 @@ namespace App.Mvc.Controllers
 
             }
 
-            return Json(0, JsonRequestBehavior.AllowGet);
+            return Json("0", JsonRequestBehavior.AllowGet);
         }
 
 
@@ -421,19 +430,36 @@ namespace App.Mvc.Controllers
         // GET: StudentInfoes/Edit/5
         public async Task<ActionResult> Edit(long? id)
         {
+            var semester = db.Semesters.SingleOrDefault(c => c.IsActive);
+            if (semester == null) return View();
+            ViewBag.SemesterId = semester.Id;
+            ViewBag.Semester = semester.Name + " " + semester.Year;
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            StudentInfo studentInfo = await db.StudentInfos.FindAsync(id);
-            if (studentInfo == null)
+            StudentInfo s = await db.StudentInfos.FindAsync(id);
+            if (s == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.ExamId = new SelectList(db.Exams, "Id", "Name", studentInfo.ExamId);
-            ViewBag.ProgramId = new SelectList(db.Programs, "Id", "Name", studentInfo.ProgramId);
-            ViewBag.SemesterId = new SelectList(db.Semesters, "Id", "Name", studentInfo.SemesterId);
-            return View(studentInfo);
+            ViewBag.ExamId = new SelectList(db.Exams, "Id", "Name", s.ExamId);
+            ViewBag.ProgramId = new SelectList(db.Programs, "Id", "ShortName", s.ProgramId);
+
+            var vm = new StudentEditVm()
+            {
+                Id = s.Id,
+                IdNo = s.IdNo,
+                Name = s.Name,
+                SemesterId = s.SemesterId,
+                ContactNo = s.ContactNo,
+                Email = s.Email,
+                ExamId = s.ExamId,
+                ProgramId = s.ProgramId
+            };
+
+            return View(vm);
         }
 
         // POST: StudentInfoes/Edit/5
@@ -441,18 +467,33 @@ namespace App.Mvc.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "Id,ProgramId,SemesterId,ExamId,IdNo,Name,ContactNo,Email,ImageFilePath,PaymentFilePath,IsDelete,EditBy,EditDate,DeleteBy,DeleteDate")] StudentInfo studentInfo)
+        public async Task<ActionResult> Edit([Bind(Include = "Id,ProgramId,SemesterId,ExamId,IdNo,Name,ContactNo,Email")] StudentEditVm vm)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(studentInfo).State = EntityState.Modified;
+                var s = db.StudentInfos.Find(vm.Id);
+                if (s != null)
+                {
+                    s.ProgramId = vm.ProgramId;
+                    s.SemesterId = vm.SemesterId;
+                    s.ExamId = vm.ExamId;
+                    s.IdNo = vm.IdNo;
+                    s.Name = vm.Name;
+                    s.ContactNo = vm.ContactNo;
+                    s.Email = vm.Email;
+                }
                 await db.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return RedirectToAction("ApprovedList");
             }
-            ViewBag.ExamId = new SelectList(db.Exams, "Id", "Name", studentInfo.ExamId);
-            ViewBag.ProgramId = new SelectList(db.Programs, "Id", "Name", studentInfo.ProgramId);
-            ViewBag.SemesterId = new SelectList(db.Semesters, "Id", "Name", studentInfo.SemesterId);
-            return View(studentInfo);
+
+            var semester = db.Semesters.SingleOrDefault(c => c.IsActive);
+            if (semester == null) return View();
+            ViewBag.SemesterId = semester.Id;
+            ViewBag.Semester = semester.Name + " " + semester.Year;
+
+            ViewBag.ExamId = new SelectList(db.Exams, "Id", "Name", vm.ExamId);
+            ViewBag.ProgramId = new SelectList(db.Programs, "Id", "Name", vm.ProgramId);
+            return View(vm);
         }
 
         // GET: StudentInfoes/Delete/5
@@ -478,7 +519,7 @@ namespace App.Mvc.Controllers
             //StudentInfo studentInfo = await db.StudentInfos.FindAsync(id);
             //db.StudentInfos.Remove(studentInfo);
             //await db.SaveChangesAsync();
-            return RedirectToAction("Index");
+            return RedirectToAction("PaymentStatusApproval");
         }
 
         protected override void Dispose(bool disposing)

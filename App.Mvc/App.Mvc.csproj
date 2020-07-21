@@ -444,6 +444,7 @@
     <Content Include="Content\DataTables\css\semanticui.scss" />
     <Content Include="Content\DataTables\css\mixins.scss" />
     <Content Include="Content\DataTables\css\common.scss" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Reports\AdmitDataSet.xsd">
       <SubType>Designer</SubType>
       <Generator>MSDataSetGenerator</Generator>
@@ -636,8 +637,12 @@
     <EmbeddedResource Include="Migrations\202007210518066_CreateRequiestTable.resx">
       <DependentUpon>202007210518066_CreateRequiestTable.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Reports\DueAdmitCardReport.rdlc" />
-    <EmbeddedResource Include="Reports\AdmitCardReport.rdlc" />
+    <Content Include="Reports\DueAdmitCardReport.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Reports\AdmitCardReport.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

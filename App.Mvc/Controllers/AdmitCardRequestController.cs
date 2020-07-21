@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using App.Core.Application;
+﻿using App.Core.Application;
 using App.Core.Command;
 using App.Core.Entities;
 using App.Mvc.Models;
+using System.Linq;
+using System.Web.Mvc;
 
 namespace App.Mvc.Controllers
 {
@@ -28,12 +25,21 @@ namespace App.Mvc.Controllers
 
             if (ModelState.IsValid)
             {
+
+
                 var s = db.StudentInfos.SingleOrDefault(c => c.IdNo == command.IdNo);
                 if (s != null)
                 {
+                    var ar = db.AdmitCardRequests.Any(c => c.StudentInfoId == s.Id && !c.IsDone);
+                    if (ar)
+                    {
+                        ViewBag.Message = "You Already Have Pending Request";
+                        ViewBag.MessageColor = "text-danger";
+                        return View(command);
+                    }
                     var a = new AdmitCardRequest()
                     {
-                        StudentInfoId =s.Id,
+                        StudentInfoId = s.Id,
                         RequestedDate = DateTimeFormatter.StringToDate(command.RequestedDate),
                         Comment = command.Comment
                     };
@@ -57,7 +63,7 @@ namespace App.Mvc.Controllers
                     ViewBag.Message = "ID Not Found";
                     ViewBag.MessageColor = "text-warning";
                 }
-                
+
             }
             ViewBag.Message = "Submit Valid Value";
             ViewBag.MessageColor = "text-warning";
