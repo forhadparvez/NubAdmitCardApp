@@ -42,7 +42,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Application\DateTimeFormatter.cs" />
+    <Compile Include="Command\AdmitCardRequestCommand.cs" />
     <Compile Include="Entities\AdmitCardApproval.cs" />
+    <Compile Include="Entities\AdmitCardRequest.cs" />
     <Compile Include="Entities\Exam.cs" />
     <Compile Include="Entities\Program.cs" />
     <Compile Include="Entities\Semester.cs" />

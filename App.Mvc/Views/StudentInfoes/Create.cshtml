@@ -110,27 +110,42 @@
     
     <script type="text/javascript">
         function readURL1(input) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-                reader.onload = function (e) {
-                    $('#imageView1')
-                        .attr('src', e.target.result);
-                };
+            var a = (input.files[0].size);
+            var b = a / 1000;
+            if (a > 200000) {
+                $("#StudentImageFile").val("");
+                alert('Your file size'+b+'KB. Your file size must be less then 200KB');
+            } else {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#imageView1')
+                            .attr('src', e.target.result);
+                    };
 
-                reader.readAsDataURL(input.files[0]);
+                    reader.readAsDataURL(input.files[0]);
+                }
             }
         }
 
         function readURL2(input) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-                reader.onload = function (e) {
-                    $('#imageView2')
-                        .attr('src', e.target.result);
-                };
+            var a = (input.files[0].size);
+            var b = a / 1000;
+            if (a > 200000) {
+                $("#StudentPaymentFile").val("");
+                alert('Your file size' + b + 'KB. Your file size must be less then 200KB');
+            } else {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#imageView2')
+                            .attr('src', e.target.result);
+                    };
 
-                reader.readAsDataURL(input.files[0]);
+                    reader.readAsDataURL(input.files[0]);
+                }
             }
         }
+
     </script>
 }
