@@ -611,6 +611,10 @@
       <Project>{511d2169-00aa-42c5-b887-2fa3c992b695}</Project>
       <Name>App.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MathCaptcha\MathCaptcha.csproj">
+      <Project>{b5a1c013-e536-495b-be3a-ee6e0c3e28dc}</Project>
+      <Name>MathCaptcha</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202007191649346_InitialCreate.resx">

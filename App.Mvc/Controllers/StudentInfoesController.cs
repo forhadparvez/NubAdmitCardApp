@@ -4,6 +4,7 @@ using App.Core.Entities;
 using App.Core.Query;
 using App.Mvc.Models;
 using App.Mvc.ViewModels;
+using MathCaptcha;
 using MessagingToolkit.QRCode.Codec;
 using Microsoft.Reporting.WebForms;
 using System;
@@ -23,6 +24,7 @@ namespace App.Mvc.Controllers
     public class StudentInfoesController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
+        private readonly Captcha captcha = new Captcha();
 
         // GET: StudentInfoes
         public async Task<ActionResult> ApprovedList()
@@ -42,38 +44,107 @@ namespace App.Mvc.Controllers
 
         public async Task<ActionResult> PaymentStatusApproval()
         {
-            string root = Server.MapPath("~");
-            var outputPath = root + @"StudentInfoes";
-            if (Directory.Exists(outputPath))
+            var user = User.Identity.Name;
+            if (user == "cse")
             {
-                var di = new DirectoryInfo(outputPath);
-                foreach (var file in di.GetFiles())
+                string root = Server.MapPath("~");
+                var outputPath = root + @"StudentInfoes";
+                if (Directory.Exists(outputPath))
                 {
-                    file.Delete();
+                    var di = new DirectoryInfo(outputPath);
+                    foreach (var file in di.GetFiles())
+                    {
+                        file.Delete();
+                    }
                 }
+                else
+                {
+                    Directory.CreateDirectory(outputPath);
+                }
+
+                var stdresult = new List<StudentInfo>();
+
+                var studentInfos = await db.StudentInfos.Include(s => s.Exam).Include(s => s.Program).Include(s => s.Semester)
+                    .Where(c => !c.IsDelete && c.ProgramId==1).ToListAsync();
+                foreach (var std in studentInfos)
+                {
+                    var isExist = db.AdmitCardApprovals.Any(c => c.StudentInfoId == std.Id && c.IsPaymentComplete && !c.IsDelete);
+                    var isExist2 = db.AdmitCardRequests.Any(c => c.StudentInfoId == std.Id && !c.IsDone);
+                    var isExist3 = db.AdmitCardApprovals.Any(c => c.StudentInfoId == std.Id);
+                    if (!isExist && isExist2)
+                        stdresult.Add(std);
+                    else if (!isExist3)
+                        stdresult.Add(std);
+                }
+                return View(stdresult);
+            }
+            else if (user == "ecse")
+            {
+                string root = Server.MapPath("~");
+                var outputPath = root + @"StudentInfoes";
+                if (Directory.Exists(outputPath))
+                {
+                    var di = new DirectoryInfo(outputPath);
+                    foreach (var file in di.GetFiles())
+                    {
+                        file.Delete();
+                    }
+                }
+                else
+                {
+                    Directory.CreateDirectory(outputPath);
+                }
+
+                var stdresult = new List<StudentInfo>();
+
+                var studentInfos = await db.StudentInfos.Include(s => s.Exam).Include(s => s.Program).Include(s => s.Semester)
+                    .Where(c => !c.IsDelete && c.ProgramId == 2).ToListAsync();
+                foreach (var std in studentInfos)
+                {
+                    var isExist = db.AdmitCardApprovals.Any(c => c.StudentInfoId == std.Id && c.IsPaymentComplete && !c.IsDelete);
+                    var isExist2 = db.AdmitCardRequests.Any(c => c.StudentInfoId == std.Id && !c.IsDone);
+                    var isExist3 = db.AdmitCardApprovals.Any(c => c.StudentInfoId == std.Id);
+                    if (!isExist && isExist2)
+                        stdresult.Add(std);
+                    else if (!isExist3)
+                        stdresult.Add(std);
+                }
+                return View(stdresult);
             }
             else
             {
-                Directory.CreateDirectory(outputPath);
+                string root = Server.MapPath("~");
+                var outputPath = root + @"StudentInfoes";
+                if (Directory.Exists(outputPath))
+                {
+                    var di = new DirectoryInfo(outputPath);
+                    foreach (var file in di.GetFiles())
+                    {
+                        file.Delete();
+                    }
+                }
+                else
+                {
+                    Directory.CreateDirectory(outputPath);
+                }
+
+                var stdresult = new List<StudentInfo>();
+
+                var studentInfos = await db.StudentInfos.Include(s => s.Exam).Include(s => s.Program).Include(s => s.Semester)
+                    .Where(c => !c.IsDelete).ToListAsync();
+                foreach (var std in studentInfos)
+                {
+                    var isExist = db.AdmitCardApprovals.Any(c => c.StudentInfoId == std.Id && c.IsPaymentComplete && !c.IsDelete);
+                    var isExist2 = db.AdmitCardRequests.Any(c => c.StudentInfoId == std.Id && !c.IsDone);
+                    var isExist3 = db.AdmitCardApprovals.Any(c => c.StudentInfoId == std.Id);
+                    if (!isExist && isExist2)
+                        stdresult.Add(std);
+                    else if (!isExist3)
+                        stdresult.Add(std);
+                }
+                return View(stdresult);
             }
-
-            var stdresult = new List<StudentInfo>();
-
-            var studentInfos = await db.StudentInfos.Include(s => s.Exam).Include(s => s.Program).Include(s => s.Semester)
-                .Where(c => !c.IsDelete).ToListAsync();
-            foreach (var std in studentInfos)
-            {
-                var isExist = db.AdmitCardApprovals.Any(c => c.StudentInfoId == std.Id && c.IsPaymentComplete && !c.IsDelete);
-                var isExist2 = db.AdmitCardRequests.Any(c => c.StudentInfoId == std.Id && !c.IsDone);
-                var isExist3 = db.AdmitCardApprovals.Any(c => c.StudentInfoId == std.Id);
-                if (!isExist && isExist2)
-                    stdresult.Add(std);
-                else if (!isExist3)
-                    stdresult.Add(std);
-            }
-
-
-            return View(stdresult);
+            
         }
 
         [HttpGet]
@@ -124,7 +195,7 @@ namespace App.Mvc.Controllers
                 result.PaymentFilePath = std.Id + ".jpg";
 
 
-                var request2 = await db.AdmitCardRequests.Where(c => c.IsDone && c.Status).ToListAsync();
+                var request2 = await db.AdmitCardRequests.Where(c => c.IsDone && c.Status && c.StudentInfoId==std.Id).ToListAsync();
                 foreach (var r in request2)
                 {
                     result.PreviousPermission += "Till: " + DateTimeFormatter.DateToString(r.RequestedDate) + ", ";
@@ -175,7 +246,7 @@ namespace App.Mvc.Controllers
             if (s != null)
             {
                 var approval = db.AdmitCardApprovals.Any(c => c.IsPaymentComplete && !c.IsDelete && c.StudentInfoId == s.Id);
-                var isSpecial = db.AdmitCardApprovals.Any(c => c.IsSpecialPermission && !c.IsDelete && !c.IsPrevious && c.StudentInfoId == s.Id);
+                var isSpecial = db.AdmitCardApprovals.Any(c => c.IsSpecialPermission && !c.IsDelete && c.StudentInfoId == s.Id);
                 var isPending = db.AdmitCardRequests.Any(c => !c.IsDone && c.StudentInfoId == s.Id);
 
                 if (isPending)
@@ -202,8 +273,8 @@ namespace App.Mvc.Controllers
                     string path = Path.Combine(Server.MapPath("~/Reports"), "DueAdmitCardReport.rdlc");
                     viewer.LocalReport.ReportPath = path;
 
-                    var special = db.AdmitCardApprovals.SingleOrDefault(c =>
-                        c.IsSpecialPermission && !c.IsDelete && !c.IsPrevious && c.StudentInfoId == s.Id);
+                    var special = db.AdmitCardApprovals.Where(c =>
+                        c.IsSpecialPermission && !c.IsDelete && c.StudentInfoId == s.Id).OrderByDescending(c=>c.Id).FirstOrDefault();
                     admit.Id = s.Id;
                     admit.IdNo = s.IdNo;
                     admit.Name = s.Name;
@@ -292,6 +363,10 @@ namespace App.Mvc.Controllers
         [AllowAnonymous]
         public ActionResult Create()
         {
+            var captcha = Captcha.GetCaptcha();
+            ViewBag.Base64String = captcha[0];
+            ViewBag.Answer = captcha[1];
+
             ViewBag.Message = "";
             ViewBag.MessageColor = "";
             ViewBag.ExamId = new SelectList(db.Exams, "Id", "Name");
@@ -312,113 +387,123 @@ namespace App.Mvc.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [AllowAnonymous]
-        public async Task<ActionResult> Create([Bind(Include = "Id,ProgramId,ExamId,SemesterId,IdNo,Name,ContactNo,Email,StudentImageFile,StudentPaymentFile")] StudentInfoVm vm)
+        public async Task<ActionResult> Create([Bind(Include = "Id,ProgramId,ExamId,SemesterId,IdNo,Name,ContactNo,Email,StudentImageFile,StudentPaymentFile, Captcha, WhoIs")] StudentInfoVm vm)
         {
             var semester = db.Semesters.SingleOrDefault(c => c.IsActive);
             if (semester == null) return View();
             ViewBag.SemesterId = semester.Id;
             ViewBag.Semester = semester.Name + " " + semester.Year;
 
-            if (ModelState.IsValid)
+            var isCaptcha = Captcha.CaptchaMatch(vm.WhoIs, vm.Captcha);
+
+            var captcha = Captcha.GetCaptcha();
+            ViewBag.Base64String = captcha[0];
+            ViewBag.Answer = captcha[1];
+
+            if (isCaptcha)
             {
-                var isExist = db.StudentInfos.Any(c => !c.IsDelete && c.IdNo == vm.IdNo);
-                if (!isExist)
+                if (ModelState.IsValid)
                 {
-                    var s = new StudentInfo()
+                    var isExist = db.StudentInfos.Any(c => !c.IsDelete && c.IdNo == vm.IdNo);
+                    if (!isExist)
                     {
-                        ProgramId = vm.ProgramId,
-                        ExamId = vm.ExamId,
-                        SemesterId = vm.SemesterId,
-                        IdNo = vm.IdNo,
-                        Name = vm.Name,
-                        ContactNo = vm.ContactNo,
-                        Email = vm.Email
-                    };
-
-                    db.StudentInfos.Add(s);
-                    var r = await db.SaveChangesAsync();
-                    try
-                    {
-                        var pdfFile1 = vm.StudentImageFile;
-                        var pdfFile2 = vm.StudentPaymentFile;
-                        if (pdfFile1 != null && pdfFile2 != null)
+                        var s = new StudentInfo()
                         {
-                            // Save Path
-                            const string drive = "D";
+                            ProgramId = vm.ProgramId,
+                            ExamId = vm.ExamId,
+                            SemesterId = vm.SemesterId,
+                            IdNo = vm.IdNo,
+                            Name = vm.Name,
+                            ContactNo = vm.ContactNo,
+                            Email = vm.Email
+                        };
 
-                            var savePathWithoutDrive1 = ":\\NubAdmit\\StudentImage\\";
-                            var savePathWithoutDrive2 = ":\\NubAdmit\\PaymentImage\\";
-                            string fileSavePath1 = drive + savePathWithoutDrive1;
-                            string fileSavePath2 = drive + savePathWithoutDrive2;
-
-                            if (!Directory.Exists(fileSavePath1))
+                        db.StudentInfos.Add(s);
+                        var r = await db.SaveChangesAsync();
+                        try
+                        {
+                            var pdfFile1 = vm.StudentImageFile;
+                            var pdfFile2 = vm.StudentPaymentFile;
+                            if (pdfFile1 != null && pdfFile2 != null)
                             {
-                                Directory.CreateDirectory(fileSavePath1);
-                            }
-                            if (!Directory.Exists(fileSavePath2))
-                            {
-                                Directory.CreateDirectory(fileSavePath2);
-                            }
+                                // Save Path
+                                const string drive = "D";
 
-                            var fileName = s.Id + ".jpg";
-                            // var fileExtension = Path.GetExtension(pdfFile.FileName);
+                                var savePathWithoutDrive1 = ":\\NubAdmit\\StudentImage\\";
+                                var savePathWithoutDrive2 = ":\\NubAdmit\\PaymentImage\\";
+                                string fileSavePath1 = drive + savePathWithoutDrive1;
+                                string fileSavePath2 = drive + savePathWithoutDrive2;
 
-                            // Check File is Exist
-                            if (!System.IO.File.Exists(fileSavePath1 + fileName))
-                            {
-                                // Save file
-                                pdfFile1.SaveAs(fileSavePath1 + fileName);
+                                if (!Directory.Exists(fileSavePath1))
+                                {
+                                    Directory.CreateDirectory(fileSavePath1);
+                                }
+                                if (!Directory.Exists(fileSavePath2))
+                                {
+                                    Directory.CreateDirectory(fileSavePath2);
+                                }
 
-                                // Save Path in Database
-                                s.ImageFilePath = savePathWithoutDrive1 + fileName;
-                            }
+                                var fileName = s.Id + ".jpg";
+                                // var fileExtension = Path.GetExtension(pdfFile.FileName);
 
-                            if (!System.IO.File.Exists(fileSavePath2 + fileName))
-                            {
-                                // Save file
-                                pdfFile2.SaveAs(fileSavePath2 + fileName);
+                                // Check File is Exist
+                                if (!System.IO.File.Exists(fileSavePath1 + fileName))
+                                {
+                                    // Save file
+                                    pdfFile1.SaveAs(fileSavePath1 + fileName);
 
-                                // Save Path in Database
-                                s.PaymentFilePath = savePathWithoutDrive2 + fileName;
+                                    // Save Path in Database
+                                    s.ImageFilePath = savePathWithoutDrive1 + fileName;
+                                }
+
+                                if (!System.IO.File.Exists(fileSavePath2 + fileName))
+                                {
+                                    // Save file
+                                    pdfFile2.SaveAs(fileSavePath2 + fileName);
+
+                                    // Save Path in Database
+                                    s.PaymentFilePath = savePathWithoutDrive2 + fileName;
+                                }
                             }
                         }
-                    }
-                    catch (Exception e)
-                    {
-                        s.IsDelete = true;
-                        await db.SaveChangesAsync();
+                        catch (Exception e)
+                        {
+                            s.IsDelete = true;
+                            await db.SaveChangesAsync();
 
-                        ViewBag.Message = "Error: " + e.Message;
+                            ViewBag.Message = "Error: " + e.Message;
+                            ViewBag.MessageColor = "text-danger";
+                            return View();
+                        }
+                        r = await db.SaveChangesAsync();
+                        if (r > 0)
+                        {
+                            ModelState.Clear();
+                            ViewBag.ExamId = new SelectList(db.Exams, "Id", "Name");
+                            ViewBag.ProgramId = new SelectList(db.Programs, "Id", "ShortName");
+                            ViewBag.Message = "Successfully Submitted";
+                            ViewBag.MessageColor = "text-success";
+                            return View();
+                        }
+                    }
+                    else
+                    {
+                        ViewBag.ExamId = new SelectList(db.Exams, "Id", "Name", vm.ExamId);
+                        ViewBag.ProgramId = new SelectList(db.Programs, "Id", "ShortName", vm.ProgramId);
+                        ViewBag.Message = "This ID No. Already in Database";
                         ViewBag.MessageColor = "text-danger";
                         return View();
                     }
-                    r = await db.SaveChangesAsync();
-                    if (r > 0)
-                    {
-                        ModelState.Clear();
-                        ViewBag.ExamId = new SelectList(db.Exams, "Id", "Name");
-                        ViewBag.ProgramId = new SelectList(db.Programs, "Id", "ShortName");
-                        ViewBag.Message = "Successfully Submitted";
-                        ViewBag.MessageColor = "text-success";
-                        return View();
-                    }
-                }
-                else
-                {
+
+
                     ViewBag.ExamId = new SelectList(db.Exams, "Id", "Name", vm.ExamId);
                     ViewBag.ProgramId = new SelectList(db.Programs, "Id", "ShortName", vm.ProgramId);
-                    ViewBag.Message = "This ID No. Already in Database";
+                    ViewBag.Message = "Submit Fail";
                     ViewBag.MessageColor = "text-danger";
-                    return View();
+                    return View(vm);
                 }
-
-
-                ViewBag.ExamId = new SelectList(db.Exams, "Id", "Name", vm.ExamId);
-                ViewBag.ProgramId = new SelectList(db.Programs, "Id", "ShortName", vm.ProgramId);
-                ViewBag.Message = "Submit Fail";
-                ViewBag.MessageColor = "text-danger";
-                return View(vm);
             }
+            
 
             ViewBag.Message = "Submit Valid Value and Image";
             ViewBag.MessageColor = "text-warning";

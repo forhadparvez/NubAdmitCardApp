@@ -28,3 +28,17 @@ textarea {
     background-color: #205688;
     border-color: #205688;
 }
+
+
+.paymentImage {
+    width: 100%;
+    height: auto;
+}
+
+.navbar-brand {
+    padding: 5px 5px;
+}
+
+.logoimage{
+    border-radius:20px;
+}

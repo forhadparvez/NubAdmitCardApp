@@ -28,7 +28,7 @@
         <th></th>
     </tr>
     </thead>
-    <tbod>
+    <tbody>
         @foreach (var item in Model)
         {
             <tr>
@@ -55,7 +55,7 @@
                 </td>
             </tr>
         }
-    </tbod>
+    </tbody>
 </table>
 
 @section scripts
@@ -63,7 +63,9 @@
     <script src="~/Scripts/DataTables/jquery.dataTables.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
-            $('#myTable').DataTable();
+            $('#myTable').DataTable({
+                pageLength : 200,
+            });
     
         });
     </script>

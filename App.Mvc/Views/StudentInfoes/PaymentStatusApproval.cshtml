@@ -93,7 +93,7 @@
                 <label>Comment: </label><label id="Comment"></label><br />
                 <label>PreviousPermission: </label><label id="PreviousPermission"></label><br />
 
-                <img id="paymentImage" width="95%" height="350px" />
+                <img id="paymentImage" class="paymentImage" />
 
             </div>
         </div>
@@ -109,7 +109,9 @@
     <script src="~/Scripts/jquery-ui.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
-            $('#myTable').DataTable();
+            $('#myTable').DataTable({
+                pageLength : 200,
+            });
             $("#RequestedDate").datepicker({ dateFormat: 'dd-mm-yy' });;
         });
 

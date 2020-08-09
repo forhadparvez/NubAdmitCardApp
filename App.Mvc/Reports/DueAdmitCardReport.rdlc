@@ -110,7 +110,7 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>ADMIT CARD</Value>
+                <Value>PERMISSION CARD</Value>
                 <Style>
                   <FontSize>16pt</FontSize>
                   <FontWeight>Bold</FontWeight>
@@ -123,10 +123,10 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox2</rd:DefaultName>
-        <Top>1.01708in</Top>
-        <Left>2.29736in</Left>
+        <Top>1.0136in</Top>
+        <Left>2.25787in</Left>
         <Height>0.34375in</Height>
-        <Width>1.74306in</Width>
+        <Width>2.18879in</Width>
         <ZIndex>6</ZIndex>
         <Style>
           <Border>
@@ -153,8 +153,8 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>1.95458in</Top>
-        <Left>0.2175in</Left>
+        <Top>1.75791in</Top>
+        <Left>0.22743in</Left>
         <Height>0.25in</Height>
         <Width>1.11458in</Width>
         <ZIndex>7</ZIndex>
@@ -183,7 +183,7 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>1.63291in</Top>
+        <Top>1.50791in</Top>
         <Left>0.21354in</Left>
         <Height>0.25in</Height>
         <Width>1.11458in</Width>
@@ -213,7 +213,7 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>2.59347in</Top>
+        <Top>2.25791in</Top>
         <Left>0.21552in</Left>
         <Height>0.25in</Height>
         <Width>1.11458in</Width>
@@ -243,8 +243,8 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>2.27402in</Top>
-        <Left>0.2175in</Left>
+        <Top>2.00791in</Top>
+        <Left>0.21354in</Left>
         <Height>0.25in</Height>
         <Width>1.11458in</Width>
         <ZIndex>10</ZIndex>
@@ -278,7 +278,7 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value> Faculty of Science &amp; Engineering: 111/2 Kawla Jamea Mosjid Road, Dakshin Khan, Uttra, Dhaka</Value>
+                <Value> Faculty of Science &amp; Engineering: 111/2 Kawla Jamea Mosjid Road, Dakshin Khan, Uttara, Dhaka</Value>
                 <Style />
               </TextRun>
             </TextRuns>
@@ -318,8 +318,8 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>1.95458in</Top>
-        <Left>1.35986in</Left>
+        <Top>1.75791in</Top>
+        <Left>1.36979in</Left>
         <Height>0.25in</Height>
         <Width>4.2118in</Width>
         <ZIndex>13</ZIndex>
@@ -350,7 +350,7 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>1.63291in</Top>
+        <Top>1.50791in</Top>
         <Left>1.3559in</Left>
         <Height>0.25in</Height>
         <Width>4.21576in</Width>
@@ -382,7 +382,7 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>2.59347in</Top>
+        <Top>2.25791in</Top>
         <Left>1.35788in</Left>
         <Height>0.25in</Height>
         <Width>5.43253in</Width>
@@ -414,8 +414,8 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>2.27402in</Top>
-        <Left>1.35986in</Left>
+        <Top>2.00791in</Top>
+        <Left>1.3559in</Left>
         <Height>0.25in</Height>
         <Width>5.43055in</Width>
         <ZIndex>16</ZIndex>
@@ -450,8 +450,8 @@
         <Value>=First(Fields!Qr.Value, "DataSet1")</Value>
         <MIMEType>image/jpeg</MIMEType>
         <Sizing>FitProportional</Sizing>
-        <Top>2.91291in</Top>
-        <Left>2.76958in</Left>
+        <Top>2.66291in</Top>
+        <Left>5.655in</Left>
         <Height>0.75in</Height>
         <Width>0.75in</Width>
         <ZIndex>18</ZIndex>
@@ -496,10 +496,10 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>3.94416in</Top>
+        <Top>4.00319in</Top>
         <Left>0.2175in</Left>
         <Height>0.25in</Height>
-        <Width>5.35416in</Width>
+        <Width>4.11458in</Width>
         <ZIndex>19</ZIndex>
         <Style>
           <Border>
@@ -528,8 +528,8 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>3.70458in</Top>
-        <Left>2.38417in</Left>
+        <Top>3.45458in</Top>
+        <Left>5.25917in</Left>
         <Height>0.25in</Height>
         <Width>1.53125in</Width>
         <ZIndex>20</ZIndex>
@@ -560,10 +560,10 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox14</rd:DefaultName>
-        <Top>3.66291in</Top>
-        <Left>4.99874in</Left>
+        <Top>3.99402in</Top>
+        <Left>5.1793in</Left>
         <Height>0.25in</Height>
-        <Width>1.79167in</Width>
+        <Width>1.70266in</Width>
         <ZIndex>21</ZIndex>
         <Style>
           <Border>
@@ -584,12 +584,16 @@
               <TextRun>
                 <Value>Valid Till: </Value>
                 <Style>
+                  <FontSize>12pt</FontSize>
+                  <FontWeight>Bold</FontWeight>
                   <Color>Red</Color>
                 </Style>
               </TextRun>
               <TextRun>
                 <Value>=Fields!ContactNo.Value</Value>
                 <Style>
+                  <FontSize>12pt</FontSize>
+                  <FontWeight>Bold</FontWeight>
                   <Color>Red</Color>
                 </Style>
               </TextRun>
@@ -598,14 +602,104 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox15</rd:DefaultName>
-        <Top>3.31125in</Top>
+        <Top>3.7393in</Top>
         <Left>0.21354in</Left>
         <Height>0.25in</Height>
-        <Width>2.28125in</Width>
+        <Width>2.39583in</Width>
         <ZIndex>22</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
+          </Border>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox17">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>Payment Request:</Value>
+                <Style>
+                  <FontWeight>Bold</FontWeight>
+                  <TextDecoration>Underline</TextDecoration>
+                  <Color>MidnightBlue</Color>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style>
+              <TextAlign>Left</TextAlign>
+            </Style>
+          </Paragraph>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>Dear </Value>
+                <Style />
+              </TextRun>
+              <TextRun>
+                <Value>=Fields!Name.Value</Value>
+                <Style />
+              </TextRun>
+              <TextRun>
+                <Value>,</Value>
+                <Style />
+              </TextRun>
+            </TextRuns>
+            <Style>
+              <TextAlign>Left</TextAlign>
+            </Style>
+          </Paragraph>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>Our system records show that you have dues. You can securely pay through bkash (For More Details: </Value>
+                <Style />
+              </TextRun>
+              <TextRun>
+                <Value>xho.to/nubbkashpaymentinstruction</Value>
+                <Style>
+                  <FontWeight>Bold</FontWeight>
+                  <TextDecoration>None</TextDecoration>
+                </Style>
+              </TextRun>
+              <TextRun>
+                <Value>)</Value>
+                <Style>
+                  <TextDecoration>None</TextDecoration>
+                </Style>
+              </TextRun>
+              <TextRun>
+                <Value>.</Value>
+                <Style />
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>We request you to clear your dues as per schedule.</Value>
+                <Style />
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox17</rd:DefaultName>
+        <Top>2.66291in</Top>
+        <Left>0.19444in</Left>
+        <Height>0.92931in</Height>
+        <Width>4.69494in</Width>
+        <ZIndex>23</ZIndex>
+        <Style>
+          <Border>
+            <Style>Solid</Style>
           </Border>
           <PaddingLeft>2pt</PaddingLeft>
           <PaddingRight>2pt</PaddingRight>

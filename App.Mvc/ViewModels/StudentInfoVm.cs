@@ -42,5 +42,11 @@ namespace App.Mvc.ViewModels
         [Required]
         [Display(Name = "Payment Screenshot")]
         public HttpPostedFileBase StudentPaymentFile { get; set; }
+
+        [Required]
+        public string Captcha { get; set; }
+
+        [Required]
+        public string WhoIs { get; set; }
     }
 }
