@@ -133,6 +133,16 @@
 
                     $("#paymentImage").attr("src", r.PaymentFilePath);
 
+                    if (r.RequestedDate==null) {
+                        $("#btnApprove").show();
+                        $("#btnDue").hide();
+                    } else {
+                        $("#btnApprove").hide();
+                        $("#btnDue").show();
+                        
+                    }
+                        
+
                     $('#myModal').modal('show');
 
                 });
