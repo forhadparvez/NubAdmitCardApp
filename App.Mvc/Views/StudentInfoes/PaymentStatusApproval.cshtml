@@ -85,6 +85,7 @@
 
             </div>
             <div class="modal-body">
+                <h3 id="paymentMessage" class="text-danger"></h3>
                 <input type="hidden" id="Id" />
                 <input type="hidden" id="RequestId" />
                 <label>Student Id: </label><label id="idNo"></label><br />
@@ -136,10 +137,11 @@
                     if (r.RequestedDate==null) {
                         $("#btnApprove").show();
                         $("#btnDue").hide();
+                        $("#paymentMessage").text("This student apply for admit card. If this student don't pay 70% please contact him for apply permission card");
                     } else {
                         $("#btnApprove").hide();
                         $("#btnDue").show();
-                        
+                        $("#paymentMessage").text("");
                     }
                         
 
