@@ -407,7 +407,7 @@ namespace App.Mvc.Controllers
                                 // Save Path
                                 const string drive = "D";
 
-                                var savePathWithoutDrive1 = ":\\NubAdmit\\StudentImage\\";
+                                var savePathWithoutDrive1 = ":\\NubAdmit\\StudentImage1\\";
                                 //var savePathWithoutDrive2 = ":\\NubAdmit\\PaymentImage\\";
                                 string fileSavePath1 = drive + savePathWithoutDrive1;
                                 //string fileSavePath2 = drive + savePathWithoutDrive2;

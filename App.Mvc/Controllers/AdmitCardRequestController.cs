@@ -29,9 +29,11 @@ namespace App.Mvc.Controllers
                 if (s != null)
                 {
                     if (!db.Payments.Any(c => c.StudentId == s.IdNo))
+                    {
                         ViewBag.Message = "Your Student Id Not In Payment Table";
-                    ViewBag.MessageColor = "text-danger";
-                    return View(command);
+                        ViewBag.MessageColor = "text-danger";
+                        return View(command);
+                    }
 
 
                     var ar = db.AdmitCardRequests.Any(c => c.StudentInfoId == s.Id && !c.IsDone);
