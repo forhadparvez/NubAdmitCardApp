@@ -197,6 +197,7 @@
     <Compile Include="Controllers\AdmitCardRequestController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\PaymentsController.cs" />
     <Compile Include="Controllers\StudentInfoesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -233,11 +234,20 @@
     <Compile Include="Migrations\202007210518066_CreateRequiestTable.Designer.cs">
       <DependentUpon>202007210518066_CreateRequiestTable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202009091335166_CratePaymentTable.cs" />
+    <Compile Include="Migrations\202009091335166_CratePaymentTable.Designer.cs">
+      <DependentUpon>202009091335166_CratePaymentTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202009091340592_CratePaymentTableUpdate.cs" />
+    <Compile Include="Migrations\202009091340592_CratePaymentTableUpdate.Designer.cs">
+      <DependentUpon>202009091340592_CratePaymentTableUpdate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\PaymentUploadVm.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reports\AdmitDataSet.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -587,6 +597,9 @@
     <Content Include="Views\StudentInfoes\PaymentStatusApproval.cshtml" />
     <Content Include="Views\StudentInfoes\AdmitDownload.cshtml" />
     <Content Include="Views\AdmitCardRequest\Create.cshtml" />
+    <Content Include="Views\Payments\Upload.cshtml" />
+    <Content Include="Views\Payments\PaymentList.cshtml" />
+    <Content Include="Views\Payments\PaymentAutoApprove.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -647,6 +660,12 @@
     <Content Include="Reports\AdmitCardReport.rdlc">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="Migrations\202009091335166_CratePaymentTable.resx">
+      <DependentUpon>202009091335166_CratePaymentTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202009091340592_CratePaymentTableUpdate.resx">
+      <DependentUpon>202009091340592_CratePaymentTableUpdate.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -1,0 +1,76 @@
+﻿@model IEnumerable<App.Core.Entities.Payment>
+
+@{
+    ViewBag.Title = "PaymentList";
+}
+
+<h2>PaymentList</h2>
+
+<table class="table table-bordered table-hover">
+    <tr class="text-center">
+        <th>Program</th>
+        <th>Exam</th>
+        <th>Student Id</th>
+        <th>Student Name</th>
+        <th>Waiver Percent</th>
+        <th>Credit Taken</th>
+        <th>Net Payable</th>
+        <th>Previous Dues</th>
+        <th>Total Payable</th>
+        <th>% Payable Amount</th>
+        <th>Received Amount</th>
+        <th>% Dues Amount</th>
+        <th>Total Dues</th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Program.ShortName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Exam.Name)
+            @Html.DisplayFor(modelItem => item.Semester.Name)
+            @Html.DisplayFor(modelItem => item.Semester.Year)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.StudentId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.StudentName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.WaiverPercent)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CreditTaken)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.NetPayable)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PreviousDues)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TotalPayable)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PayablePercentAmount)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ReceivedAmount)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DuesPercentAmount)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TotalDues)
+        </td>
+        <td>
+            <a href="#">Delete</a>
+        </td>
+    </tr>
+}
+
+</table>

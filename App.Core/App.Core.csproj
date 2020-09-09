@@ -47,6 +47,7 @@
     <Compile Include="Entities\AdmitCardApproval.cs" />
     <Compile Include="Entities\AdmitCardRequest.cs" />
     <Compile Include="Entities\Exam.cs" />
+    <Compile Include="Entities\Payment.cs" />
     <Compile Include="Entities\Program.cs" />
     <Compile Include="Entities\Semester.cs" />
     <Compile Include="Entities\StudentInfo.cs" />

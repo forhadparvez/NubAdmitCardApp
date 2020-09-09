@@ -25,5 +25,8 @@ namespace App.Mvc.Models
         public DbSet<AdmitCardRequest> AdmitCardRequests { get; set; }
 
         public DbSet<AdmitCardApproval> AdmitCardApprovals { get; set; }
+
+
+        public DbSet<Payment> Payments { get; set; }
     }
 }

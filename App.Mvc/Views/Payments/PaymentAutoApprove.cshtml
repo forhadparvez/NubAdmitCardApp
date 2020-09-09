@@ -1,0 +1,73 @@
+﻿@model App.Mvc.Models.PaymentUploadVm
+
+@{
+    ViewBag.Title = "PaymentAutoApprove";
+}
+
+@using (Ajax.BeginForm("PaymentAutoApprove", "Payments", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnFailure = "OnFailure" }, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="panel panel-info">
+        <div class="panel-heading">Payment Auto Approve</div>
+        <div class="panel-body">
+            <div class="col-md-6 col-sm-10">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.SemesterId, "Semester", htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-9">
+                        <input data-val="true" id="SemesterId" name="SemesterId" type="hidden" value="@ViewBag.SemesterId">
+                        <input class="form-control" id="SemesterName" name="SemesterName" readonly="true" value="@ViewBag.Semester">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ExamId, "Exam", htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-9">
+                        @Html.DropDownList("ExamId", null, htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.ExamId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ProgramId, "Program", htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-9">
+                        @Html.DropDownList("ProgramId", null, htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.ProgramId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <button id="btnSubmit" class="btn btn-primary" type="submit">Submit</button>
+                    <label id="message"></label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+
+@section scripts
+{
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+    <script type="text/javascript">
+        function OnSuccess(data) {
+            setTimeout(function () {
+                $("#message").text("Done !!!");
+                $("#message").removeClass("text-warning");
+                $("#message").addClass("text-success");
+
+            }, 10);
+        }
+        function OnFailure(data) {
+            alert("Report Fail." + data);
+        }
+
+        $(document.body).on("click",
+            "#btnSubmit",
+            function() {
+                $("#message").text("Processing. Please Wait !!!");
+                $("#message").removeClass("text-success");
+                $("#message").addClass("text-warning");
+            });
+    </script>
+}
+
