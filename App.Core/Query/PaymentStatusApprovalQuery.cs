@@ -14,9 +14,12 @@ namespace App.Core.Query
         public string RequestedDate { get; set; }
         public string Comment { get; set; }
 
+        public string PaymentStatus { get; set; }
+
         public string ImageFilePath { get; set; }
         public string PaymentFilePath { get; set; }
 
         public string PreviousPermission { get; set; }
+        public long PaymentId { get; set; }
     }
 }

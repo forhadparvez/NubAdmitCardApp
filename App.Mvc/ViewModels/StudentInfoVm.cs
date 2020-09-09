@@ -12,13 +12,13 @@ namespace App.Mvc.ViewModels
         [Display(Name = "Program")]
         public byte ProgramId { get; set; }
 
-        public Semester Semester { get; set; }
-        [Display(Name = "Semester")]
-        public int SemesterId { get; set; }
+        //public Semester Semester { get; set; }
+        //[Display(Name = "Semester")]
+        //public int SemesterId { get; set; }
 
-        public Exam Exam { get; set; }
-        [Display(Name = "Exam")]
-        public byte ExamId { get; set; }
+        //public Exam Exam { get; set; }
+        //[Display(Name = "Exam")]
+        //public byte ExamId { get; set; }
 
         [Required]
         [Display(Name = "Student ID")]
@@ -39,9 +39,9 @@ namespace App.Mvc.ViewModels
         [Display(Name = "Student Photo")]
         public HttpPostedFileBase StudentImageFile { get; set; }
 
-        [Required]
-        [Display(Name = "Payment Screenshot")]
-        public HttpPostedFileBase StudentPaymentFile { get; set; }
+        //[Required]
+        //[Display(Name = "Payment Screenshot")]
+        //public HttpPostedFileBase StudentPaymentFile { get; set; }
 
         [Required]
         public string Captcha { get; set; }

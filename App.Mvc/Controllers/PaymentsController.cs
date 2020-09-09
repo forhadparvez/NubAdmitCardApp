@@ -1,20 +1,18 @@
-﻿using System;
+﻿using App.Core.Application;
+using App.Core.Entities;
+using App.Mvc.Models;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Data.OleDb;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using App.Core.Entities;
-using App.Mvc.Models;
-using Microsoft.Reporting.WebForms;
 
 namespace App.Mvc.Controllers
 {
-    //[Authorize]
+    [Authorize]
     public class PaymentsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -23,12 +21,88 @@ namespace App.Mvc.Controllers
         public ActionResult PaymentList()
         {
             var entity = db.Payments.Where(c => !c.IsDelete)
-                .Include(c=>c.Exam)
-                .Include(c=>c.Program)
-                .Include(c=>c.Semester)
-                .OrderBy(c=>c.StudentId);
+                .Include(c => c.Exam)
+                .Include(c => c.Program)
+                .Include(c => c.Semester)
+                .OrderBy(c => c.StudentId);
             return View(entity);
         }
+
+
+        public ActionResult DuePaymentAutoApprove()
+        {
+            ViewBag.ExamId = new SelectList(db.Exams, "Id", "Name");
+            ViewBag.ProgramId = new SelectList(db.Programs, "Id", "ShortName");
+
+            var semester = db.Semesters.SingleOrDefault(c => c.IsActive);
+            if (semester == null) return View();
+
+            ViewBag.SemesterId = semester.Id;
+            ViewBag.Semester = semester.Name + " " + semester.Year;
+
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult DuePaymentAutoApprove(PaymentUploadVm vm)
+        {
+            var user = User.Identity.Name;
+
+            ViewBag.ExamId = new SelectList(db.Exams, "Id", "Name");
+            ViewBag.ProgramId = new SelectList(db.Programs, "Id", "ShortName");
+
+            var semester = db.Semesters.SingleOrDefault(c => c.IsActive);
+            if (semester == null) return View();
+
+            ViewBag.SemesterId = semester.Id;
+            ViewBag.Semester = semester.Name + " " + semester.Year;
+
+            var entity = db.Payments.Where(c => !c.IsDelete && c.SemesterId == vm.SemesterId && c.ExamId == vm.ExamId && c.DuesPercentAmount <= vm.MaxDuePayment && c.DuesPercentAmount >= vm.MinDuePayment).ToList();
+            foreach (var p in entity)
+            {
+                var student = db.StudentInfos.FirstOrDefault(c => c.IdNo == p.StudentId && !c.IsDelete);
+
+                if (student != null)
+                {
+                    if (db.AdmitCardApprovals.Any(c => c.PaymentId == p.Id && c.IsPaymentComplete))
+                        continue;
+
+                    var li = db.AdmitCardApprovals.Where(c => c.StudentInfoId == student.Id);
+                    foreach (var ap in li)
+                    {
+                        ap.IsPrevious = true;
+                    }
+                    db.SaveChanges();
+
+
+                    var stds = db.AdmitCardRequests.Where(c => c.StudentInfoId == student.Id && !c.IsDone);
+                    foreach (var std in stds)
+                    {
+                        std.IsDone = true;
+                        std.Status = true;
+                    }
+                    db.SaveChanges();
+
+                    var a = new AdmitCardApproval()
+                    {
+                        PaymentId = p.Id,
+                        StudentInfoId = student.Id,
+                        ExceptedDate = DateTimeFormatter.StringToDate(vm.PermissionDate),
+                        IsSpecialPermission = true,
+                        Comments = "",
+                        IsPrevious = false,
+                        ApproveBy = user,
+                        ApproveDate = DateTime.Now
+                    };
+
+                    db.AdmitCardApprovals.Add(a);
+
+                    var r = db.SaveChanges();
+                }
+            }
+            return Json(1, JsonRequestBehavior.AllowGet);
+        }
+
 
         public ActionResult PaymentAutoApprove()
         {
@@ -58,13 +132,16 @@ namespace App.Mvc.Controllers
             ViewBag.SemesterId = semester.Id;
             ViewBag.Semester = semester.Name + " " + semester.Year;
 
-            var entity = db.Payments.Where(c => !c.IsDelete && c.SemesterId == vm.SemesterId && c.ExamId == vm.ExamId && c.DuesPercentAmount<=100).ToList();
+            var entity = db.Payments.Where(c => !c.IsDelete && c.SemesterId == vm.SemesterId && c.ExamId == vm.ExamId && c.DuesPercentAmount <= 100).ToList();
             foreach (var p in entity)
             {
                 var student = db.StudentInfos.FirstOrDefault(c => c.IdNo == p.StudentId && !c.IsDelete);
 
                 if (student != null)
                 {
+                    if (db.AdmitCardApprovals.Any(c => c.PaymentId == p.Id && c.IsPaymentComplete))
+                        continue;
+
                     var li = db.AdmitCardApprovals.Where(c => c.StudentInfoId == student.Id);
                     foreach (var ap in li)
                     {
@@ -74,9 +151,9 @@ namespace App.Mvc.Controllers
 
                     var a = new AdmitCardApproval()
                     {
+                        PaymentId = p.Id,
                         StudentInfoId = student.Id,
-                        IsPaymentComplete = true,
-                        IsPrevious = true,
+                        IsPaymentComplete = false,
                         ApproveBy = user,
                         ApproveDate = DateTime.Now
                     };
@@ -87,7 +164,7 @@ namespace App.Mvc.Controllers
                 }
             }
             return Json(1, JsonRequestBehavior.AllowGet);
-        }   
+        }
 
         // GET: PaymentUpload
         public ActionResult Upload()
@@ -104,7 +181,7 @@ namespace App.Mvc.Controllers
             return View();
         }
 
-        
+
         [HttpPost]
         public ActionResult Upload(PaymentUploadVm vm)
         {
@@ -159,7 +236,7 @@ namespace App.Mvc.Controllers
                             CommandText = "Select * from [Sheet1$]"
                         };
 
-                        var result=new List<Payment>();
+                        var result = new List<Payment>();
 
                         var reader = cmd.ExecuteReader();
                         if (reader.HasRows)
@@ -193,6 +270,23 @@ namespace App.Mvc.Controllers
                                             DuesPercentAmount = StringToNumber(reader[10].ToString()),
                                             TotalDues = StringToNumber(reader[11].ToString())
                                         };
+
+                                        //if (!db.StudentInfos.Any(c => c.IdNo == studentId))
+                                        //{
+                                        //    var std = new StudentInfo()
+                                        //    {
+                                        //        ProgramId = vm.ProgramId,
+                                        //        IdNo = studentId,
+                                        //        Name = p.StudentName,
+                                        //        ContactNo = "-",
+                                        //        Email = "demo@mail.com"
+                                        //    };
+
+                                        //    db.StudentInfos.Add(std);
+                                        //    db.SaveChanges();
+                                        //}
+
+
                                         result.Add(p);
                                     }
                                     else
@@ -210,7 +304,7 @@ namespace App.Mvc.Controllers
                                         db.SaveChanges();
                                     }
                                 }
-                                catch (Exception)
+                                catch (Exception e)
                                 {
                                     //
                                 }
@@ -223,7 +317,7 @@ namespace App.Mvc.Controllers
 
                         reader.Close();
 
-                        
+
 
                         return Json(1, JsonRequestBehavior.AllowGet);
 

@@ -36,12 +36,38 @@
                     </div>
 
                     <div class="form-group">
+                        @Html.LabelFor(model => model.MinDuePayment, htmlAttributes: new { @class = "control-label col-md-3" })
+                        <div class="col-md-9">
+                            @Html.EditorFor(model => model.MinDuePayment, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.MinDuePayment, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.MaxDuePayment, htmlAttributes: new { @class = "control-label col-md-3" })
+                        <div class="col-md-9">
+                            @Html.EditorFor(model => model.MaxDuePayment, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.MaxDuePayment, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.PermissionDate, htmlAttributes: new { @class = "control-label col-md-3" })
+                        <div class="col-md-9">
+                            @Html.EditorFor(model => model.PermissionDate, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.PermissionDate, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
                         <button id="btnSubmit" class="btn btn-primary" type="submit">Submit</button>
                         <label id="message"></label>
                     </div>
+
                 </div>
             </div>
         </div>
+
     </div>
 
 }
@@ -65,11 +91,19 @@
 
         $(document.body).on("click",
             "#btnSubmit",
-            function() {
+            function () {
                 $("#message").text("Processing. Please Wait !!!");
                 $("#message").removeClass("text-success");
                 $("#message").addClass("text-warning");
             });
+    </script>
+
+    <script src="~/Scripts/jquery-ui.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#PermissionDate").datepicker({ dateFormat: 'dd-mm-yy' });;
+        })
     </script>
 }
 

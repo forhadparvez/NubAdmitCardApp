@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using App.Core.Entities;
+using System.ComponentModel.DataAnnotations;
 
 namespace App.Core.Command
 {
@@ -12,5 +13,14 @@ namespace App.Core.Command
 
         [Display(Name = "Tentative Payment Date with Reason")]
         public string Comment { get; set; }
+
+
+        public Semester Semester { get; set; }
+        [Display(Name = "Semester")]
+        public int SemesterId { get; set; }
+
+        public Exam Exam { get; set; }
+        [Display(Name = "Exam")]
+        public byte ExamId { get; set; }
     }
 }

@@ -242,6 +242,18 @@
     <Compile Include="Migrations\202009091340592_CratePaymentTableUpdate.Designer.cs">
       <DependentUpon>202009091340592_CratePaymentTableUpdate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202009091714428_AddPaymentInApproveTable.cs" />
+    <Compile Include="Migrations\202009091714428_AddPaymentInApproveTable.Designer.cs">
+      <DependentUpon>202009091714428_AddPaymentInApproveTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202009091754356_UpdateStudent.cs" />
+    <Compile Include="Migrations\202009091754356_UpdateStudent.Designer.cs">
+      <DependentUpon>202009091754356_UpdateStudent.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202009091816157_UpdateStudentInfoTable2.cs" />
+    <Compile Include="Migrations\202009091816157_UpdateStudentInfoTable2.Designer.cs">
+      <DependentUpon>202009091816157_UpdateStudentInfoTable2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
@@ -600,6 +612,7 @@
     <Content Include="Views\Payments\Upload.cshtml" />
     <Content Include="Views\Payments\PaymentList.cshtml" />
     <Content Include="Views\Payments\PaymentAutoApprove.cshtml" />
+    <Content Include="Views\Payments\DuePaymentAutoApprove.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -665,6 +678,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202009091340592_CratePaymentTableUpdate.resx">
       <DependentUpon>202009091340592_CratePaymentTableUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202009091714428_AddPaymentInApproveTable.resx">
+      <DependentUpon>202009091714428_AddPaymentInApproveTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202009091754356_UpdateStudent.resx">
+      <DependentUpon>202009091754356_UpdateStudent.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202009091816157_UpdateStudentInfoTable2.resx">
+      <DependentUpon>202009091816157_UpdateStudentInfoTable2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

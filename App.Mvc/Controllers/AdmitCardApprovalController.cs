@@ -39,7 +39,7 @@ namespace App.Mvc.Controllers
 
 
 
-        public JsonResult DueApproval(long stdId, long requestId, string date)
+        public JsonResult DueApproval(long stdId, long? requestId, string date, long paymentId)
         {
             var li = db.AdmitCardApprovals.Where(c => c.StudentInfoId == stdId);
             foreach (var ap in li)
@@ -48,7 +48,7 @@ namespace App.Mvc.Controllers
             }
             db.SaveChanges();
 
-            var stds = db.AdmitCardRequests.Where(c => c.Id == requestId);
+            var stds = db.AdmitCardRequests.Where(c => c.StudentInfoId == stdId);
             foreach (var std in stds)
             {
                 std.IsDone = true;
@@ -59,11 +59,12 @@ namespace App.Mvc.Controllers
             var user = User.Identity.Name;
             var a = new AdmitCardApproval()
             {
+                PaymentId = paymentId,
                 StudentInfoId = stdId,
                 ExceptedDate = DateTimeFormatter.StringToDate(date),
                 IsSpecialPermission = true,
                 Comments = "",
-                IsPrevious = true,
+                IsPrevious = false,
                 ApproveBy = user,
                 ApproveDate = DateTime.Now
             };

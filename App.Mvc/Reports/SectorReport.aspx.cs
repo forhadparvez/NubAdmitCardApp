@@ -33,7 +33,7 @@ namespace App.Mvc.Reports
 
                         var idNo = searchText;
 
-                        var s = db.StudentInfos.Include(c => c.Exam).Include(c => c.Program).Include(c => c.Semester)
+                        var s = db.StudentInfos.Include(c => c.Program)
                             .SingleOrDefault(c => c.IdNo == idNo);
                         if (s != null)
                         {
@@ -47,8 +47,8 @@ namespace App.Mvc.Reports
                                     IdNo = s.IdNo,
                                     Name = s.Name,
                                     Program = s.Program.Name + "(" + s.Program.ShortName + ")",
-                                    Exam = s.Exam.Name,
-                                    Semester = s.Semester.Name + " " + s.Semester.Year,
+                                    //Exam = s.Exam.Name,
+                                    //Semester = s.Semester.Name + " " + s.Semester.Year,
                                     ContactNo = s.ContactNo,
                                     Email = s.Email
                                 };

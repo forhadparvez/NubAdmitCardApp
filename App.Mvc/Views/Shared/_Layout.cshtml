@@ -34,8 +34,21 @@
                         <li>@Html.ActionLink("Home", "Index", "Home")</li>
                         <li>@Html.ActionLink("Pending Request", "PaymentStatusApproval", "StudentInfoes")</li>
                         <li>@Html.ActionLink("Approved List", "ApprovedList", "StudentInfoes")</li>
-                        <li>@Html.ActionLink("Payment Upload", "Upload", "Payments")</li>
-                        <li>@Html.ActionLink("Payment List", "PaymentList", "Payments")</li>
+                        
+                        
+                        
+                        
+                        
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">Payment Option <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>@Html.ActionLink("Payment Upload", "Upload", "Payments")</li>
+                                <li>@Html.ActionLink("Auto Full Payment Approve", "PaymentAutoApprove", "Payments")</li>
+                                <li>@Html.ActionLink("Auto Due Approve", "DuePaymentAutoApprove", "Payments")</li>
+                                <li>@Html.ActionLink("Payment List", "PaymentList", "Payments")</li>
+                            </ul>
+                        </li>
                     }
                 </ul>
                 @Html.Partial("_LoginPartial")

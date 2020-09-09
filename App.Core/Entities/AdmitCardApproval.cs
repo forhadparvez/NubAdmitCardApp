@@ -9,6 +9,9 @@ namespace App.Core.Entities
         public StudentInfo StudentInfo { get; set; }
         public long StudentInfoId { get; set; }
 
+        public Payment Payment { get; set; }
+        public long? PaymentId { get; set; }
+
         public bool IsPaymentComplete { get; set; }
 
         public bool IsSpecialPermission { get; set; }

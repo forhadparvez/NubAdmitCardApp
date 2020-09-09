@@ -31,7 +31,7 @@ namespace App.Mvc.Controllers
         {
             var stdresult = new List<StudentInfo>();
 
-            var studentInfos = await db.StudentInfos.Include(s => s.Exam).Include(s => s.Program).Include(s => s.Semester).Where(c => !c.IsDelete).ToListAsync();
+            var studentInfos = await db.StudentInfos.Include(s => s.Program).Where(c => !c.IsDelete).ToListAsync();
             foreach (var std in studentInfos)
             {
                 var isExist = db.AdmitCardApprovals.Any(c => c.StudentInfoId == std.Id && !c.IsDelete);
@@ -42,113 +42,57 @@ namespace App.Mvc.Controllers
             return View(stdresult);
         }
 
-        public async Task<ActionResult> PaymentStatusApproval()
+        public ActionResult PaymentStatusApproval()
         {
-            var user = User.Identity.Name;
-            if (user == "cse")
+            ViewBag.ExamId = new SelectList(db.Exams, "Id", "Name");
+            ViewBag.ProgramId = new SelectList(db.Programs, "Id", "ShortName");
+
+            var semester = db.Semesters.SingleOrDefault(c => c.IsActive);
+            if (semester == null) return View();
+
+            ViewBag.SemesterId = semester.Id;
+            ViewBag.Semester = semester.Name + " " + semester.Year;
+
+            return View();
+        }
+
+        public async Task<ActionResult> GetPaymentStatusApproval(byte programId, int semesterId, byte examId)
+        {
+            string root = Server.MapPath("~");
+            var outputPath = root + @"StudentInfoes";
+            if (Directory.Exists(outputPath))
             {
-                string root = Server.MapPath("~");
-                var outputPath = root + @"StudentInfoes";
-                if (Directory.Exists(outputPath))
+                var di = new DirectoryInfo(outputPath);
+                foreach (var file in di.GetFiles())
                 {
-                    var di = new DirectoryInfo(outputPath);
-                    foreach (var file in di.GetFiles())
-                    {
-                        file.Delete();
-                    }
+                    file.Delete();
                 }
-                else
-                {
-                    Directory.CreateDirectory(outputPath);
-                }
-
-                var stdresult = new List<StudentInfo>();
-
-                var studentInfos = await db.StudentInfos.Include(s => s.Exam).Include(s => s.Program).Include(s => s.Semester)
-                    .Where(c => !c.IsDelete && c.ProgramId==1).ToListAsync();
-                foreach (var std in studentInfos)
-                {
-                    var isExist = db.AdmitCardApprovals.Any(c => c.StudentInfoId == std.Id && c.IsPaymentComplete && !c.IsDelete);
-                    var isExist2 = db.AdmitCardRequests.Any(c => c.StudentInfoId == std.Id && !c.IsDone);
-                    var isExist3 = db.AdmitCardApprovals.Any(c => c.StudentInfoId == std.Id);
-                    if (!isExist && isExist2)
-                        stdresult.Add(std);
-                    else if (!isExist3)
-                        stdresult.Add(std);
-                }
-                return View(stdresult);
-            }
-            else if (user == "ecse")
-            {
-                string root = Server.MapPath("~");
-                var outputPath = root + @"StudentInfoes";
-                if (Directory.Exists(outputPath))
-                {
-                    var di = new DirectoryInfo(outputPath);
-                    foreach (var file in di.GetFiles())
-                    {
-                        file.Delete();
-                    }
-                }
-                else
-                {
-                    Directory.CreateDirectory(outputPath);
-                }
-
-                var stdresult = new List<StudentInfo>();
-
-                var studentInfos = await db.StudentInfos.Include(s => s.Exam).Include(s => s.Program).Include(s => s.Semester)
-                    .Where(c => !c.IsDelete && c.ProgramId == 2).ToListAsync();
-                foreach (var std in studentInfos)
-                {
-                    var isExist = db.AdmitCardApprovals.Any(c => c.StudentInfoId == std.Id && c.IsPaymentComplete && !c.IsDelete);
-                    var isExist2 = db.AdmitCardRequests.Any(c => c.StudentInfoId == std.Id && !c.IsDone);
-                    var isExist3 = db.AdmitCardApprovals.Any(c => c.StudentInfoId == std.Id);
-                    if (!isExist && isExist2)
-                        stdresult.Add(std);
-                    else if (!isExist3)
-                        stdresult.Add(std);
-                }
-                return View(stdresult);
             }
             else
             {
-                string root = Server.MapPath("~");
-                var outputPath = root + @"StudentInfoes";
-                if (Directory.Exists(outputPath))
-                {
-                    var di = new DirectoryInfo(outputPath);
-                    foreach (var file in di.GetFiles())
-                    {
-                        file.Delete();
-                    }
-                }
-                else
-                {
-                    Directory.CreateDirectory(outputPath);
-                }
-
-                var stdresult = new List<StudentInfo>();
-
-                var studentInfos = await db.StudentInfos.Include(s => s.Exam).Include(s => s.Program).Include(s => s.Semester)
-                    .Where(c => !c.IsDelete).ToListAsync();
-                foreach (var std in studentInfos)
-                {
-                    var isExist = db.AdmitCardApprovals.Any(c => c.StudentInfoId == std.Id && c.IsPaymentComplete && !c.IsDelete);
-                    var isExist2 = db.AdmitCardRequests.Any(c => c.StudentInfoId == std.Id && !c.IsDone);
-                    var isExist3 = db.AdmitCardApprovals.Any(c => c.StudentInfoId == std.Id);
-                    if (!isExist && isExist2)
-                        stdresult.Add(std);
-                    else if (!isExist3)
-                        stdresult.Add(std);
-                }
-                return View(stdresult);
+                Directory.CreateDirectory(outputPath);
             }
-            
+
+            var result = new List<StudentInfo>();
+
+            var payments = await db.Payments.Include(s => s.Program)
+                .Where(c => !c.IsDelete && c.ProgramId == programId && c.SemesterId == semesterId && c.ExamId == examId).ToListAsync();
+            foreach (var pay in payments)
+            {
+                var isExist = db.AdmitCardApprovals.Any(c => c.PaymentId == pay.Id && !c.IsDelete);
+                var std = await db.StudentInfos.Include(c => c.Program).SingleOrDefaultAsync(c => c.IdNo == pay.StudentId);
+                var isExist2 = db.AdmitCardRequests.Any(c => c.StudentInfoId == std.Id && !c.IsDone);
+
+                if (!isExist || isExist2)
+                    result.Add(std);
+
+            }
+            return Json(result, JsonRequestBehavior.AllowGet);
+
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetDetails(long stdId)
+        public async Task<JsonResult> GetDetails(long stdId, byte programId, int semesterId, byte examId)
         {
             string root = Server.MapPath("~");
             var outputPath = root + @"StudentInfoes";
@@ -167,7 +111,7 @@ namespace App.Mvc.Controllers
 
 
 
-            var std = await db.StudentInfos.Include(s => s.Exam).Include(s => s.Program).Include(s => s.Semester).SingleOrDefaultAsync(c => !c.IsDelete && c.Id == stdId);
+            var std = await db.StudentInfos.Include(s => s.Program).SingleOrDefaultAsync(c => !c.IsDelete && c.Id == stdId);
 
             if (std != null)
             {
@@ -178,6 +122,15 @@ namespace App.Mvc.Controllers
                     Name = std.Name
                 };
 
+                var payments = await db.Payments.Include(s => s.Program)
+                    .FirstOrDefaultAsync(c => !c.IsDelete && c.ProgramId == programId && c.SemesterId == semesterId && c.ExamId == examId && c.StudentId == std.IdNo);
+
+                if (payments != null)
+                {
+                    result.PaymentStatus = payments.DuesPercentAmount.ToString();
+                    result.PaymentId = payments.Id;
+                }
+
 
                 var request = await db.AdmitCardRequests.SingleOrDefaultAsync(c => !c.IsDone && c.StudentInfoId == std.Id);
                 if (request != null)
@@ -187,15 +140,15 @@ namespace App.Mvc.Controllers
                     result.Comment = request.Comment;
                 }
 
-                var link = "D" + std.PaymentFilePath;
-                var sourchFile = Path.Combine(link);
-                var tergetPath = Path.Combine(root + @"\StudentInfoes", std.Id + ".jpg");
+                //var link = "D" + std.PaymentFilePath;
+                //var sourchFile = Path.Combine(link);
+                //var tergetPath = Path.Combine(root + @"\StudentInfoes", std.Id + ".jpg");
 
-                System.IO.File.Copy(sourchFile, tergetPath, true);
-                result.PaymentFilePath = std.Id + ".jpg";
+                //System.IO.File.Copy(sourchFile, tergetPath, true);
+                //result.PaymentFilePath = std.Id + ".jpg";
 
 
-                var request2 = await db.AdmitCardRequests.Where(c => c.IsDone && c.Status && c.StudentInfoId==std.Id).ToListAsync();
+                var request2 = await db.AdmitCardRequests.Where(c => c.IsDone && c.Status && c.StudentInfoId == std.Id).ToListAsync();
                 foreach (var r in request2)
                 {
                     result.PreviousPermission += "Till: " + DateTimeFormatter.DateToString(r.RequestedDate) + ", ";
@@ -214,6 +167,14 @@ namespace App.Mvc.Controllers
         [AllowAnonymous]
         public ActionResult AdmitDownload()
         {
+            ViewBag.ExamId = new SelectList(db.Exams, "Id", "Name");
+
+            var semester = db.Semesters.SingleOrDefault(c => c.IsActive);
+            if (semester == null) return View();
+
+            ViewBag.SemesterId = semester.Id;
+            ViewBag.Semester = semester.Name + " " + semester.Year;
+
             return View();
         }
 
@@ -241,12 +202,17 @@ namespace App.Mvc.Controllers
 
             var idNo = vm.IdNo;
 
-            var s = db.StudentInfos.Include(c => c.Exam).Include(c => c.Program).Include(c => c.Semester)
+            var s = db.StudentInfos.Include(c => c.Program)
                 .SingleOrDefault(c => c.IdNo == idNo && !c.IsDelete);
             if (s != null)
             {
-                var approval = db.AdmitCardApprovals.Any(c => c.IsPaymentComplete && !c.IsDelete && c.StudentInfoId == s.Id);
-                var isSpecial = db.AdmitCardApprovals.Any(c => c.IsSpecialPermission && !c.IsDelete && c.StudentInfoId == s.Id);
+                var payment = db.Payments.Include(c => c.Semester).Include(c => c.Exam).FirstOrDefault(c =>
+                        !c.IsDelete && c.ProgramId == s.ProgramId && c.SemesterId == vm.SemesterId &&
+                        c.ExamId == vm.ExamId && c.StudentId == s.IdNo);
+
+
+                var approval = db.AdmitCardApprovals.Any(c => c.PaymentId == payment.Id && !c.IsPrevious && c.IsPaymentComplete && !c.IsDelete && c.StudentInfoId == s.Id);
+                var isSpecial = db.AdmitCardApprovals.Any(c => c.PaymentId == payment.Id && !c.IsPrevious && c.IsSpecialPermission && !c.IsDelete && c.StudentInfoId == s.Id);
                 var isPending = db.AdmitCardRequests.Any(c => !c.IsDone && c.StudentInfoId == s.Id);
 
                 if (isPending)
@@ -262,8 +228,16 @@ namespace App.Mvc.Controllers
                     admit.IdNo = s.IdNo;
                     admit.Name = s.Name;
                     admit.Program = s.Program.Name + "(" + s.Program.ShortName + ")";
-                    admit.Exam = s.Exam.Name;
-                    admit.Semester = s.Semester.Name + " " + s.Semester.Year;
+                    if (payment != null)
+                    {
+                        admit.Exam = payment.Exam.Name;
+                        admit.Semester = payment.Semester.Name + " " + payment.Semester.Year;
+                    }
+                    else
+                    {
+                        admit.Exam = "-";
+                        admit.Semester = "-";
+                    }
                     admit.ContactNo = s.ContactNo;
                     admit.Email = s.Email;
                 }
@@ -274,19 +248,35 @@ namespace App.Mvc.Controllers
                     viewer.LocalReport.ReportPath = path;
 
                     var special = db.AdmitCardApprovals.Where(c =>
-                        c.IsSpecialPermission && !c.IsDelete && c.StudentInfoId == s.Id).OrderByDescending(c=>c.Id).FirstOrDefault();
+                        c.IsSpecialPermission && !c.IsDelete && c.StudentInfoId == s.Id).OrderByDescending(c => c.Id).FirstOrDefault();
                     admit.Id = s.Id;
                     admit.IdNo = s.IdNo;
                     admit.Name = s.Name;
                     admit.Program = s.Program.Name + "(" + s.Program.ShortName + ")";
-                    admit.Exam = s.Exam.Name;
-                    admit.Semester = s.Semester.Name + " " + s.Semester.Year;
+                    if (payment != null)
+                    {
+                        admit.Exam = payment.Exam.Name;
+                        admit.Semester = payment.Semester.Name + " " + payment.Semester.Year;
+                    }
+                    else
+                    {
+                        admit.Exam = "-";
+                        admit.Semester = "-";
+                    }
                     admit.ContactNo = DateTimeFormatter.DateToString(special.ExceptedDate);
                     admit.Email = s.Email;
                 }
                 // Image and QR
-                var image = @"D" + s.ImageFilePath;
-                admit.StudentImage = System.IO.File.ReadAllBytes(image);
+                if (!string.IsNullOrEmpty(s.ImageFilePath))
+                {
+                    var image = @"D" + s.ImageFilePath;
+                    admit.StudentImage = System.IO.File.ReadAllBytes(image);
+                }
+                else
+                {
+                    admit.StudentImage = new byte[0];
+                }
+
 
                 var encoder = new QRCodeEncoder { QRCodeScale = 3 };
                 var bmp = encoder.Encode(s.IdNo);
@@ -369,14 +359,8 @@ namespace App.Mvc.Controllers
 
             ViewBag.Message = "";
             ViewBag.MessageColor = "";
-            ViewBag.ExamId = new SelectList(db.Exams, "Id", "Name");
             ViewBag.ProgramId = new SelectList(db.Programs, "Id", "ShortName");
 
-            var semester = db.Semesters.SingleOrDefault(c => c.IsActive);
-            if (semester == null) return View();
-
-            ViewBag.SemesterId = semester.Id;
-            ViewBag.Semester = semester.Name + " " + semester.Year;
 
             return View();
         }
@@ -387,12 +371,8 @@ namespace App.Mvc.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [AllowAnonymous]
-        public async Task<ActionResult> Create([Bind(Include = "Id,ProgramId,ExamId,SemesterId,IdNo,Name,ContactNo,Email,StudentImageFile,StudentPaymentFile, Captcha, WhoIs")] StudentInfoVm vm)
+        public async Task<ActionResult> Create([Bind(Include = "Id,ProgramId,IdNo,Name,ContactNo,Email,StudentImageFile, Captcha, WhoIs")] StudentInfoVm vm)
         {
-            var semester = db.Semesters.SingleOrDefault(c => c.IsActive);
-            if (semester == null) return View();
-            ViewBag.SemesterId = semester.Id;
-            ViewBag.Semester = semester.Name + " " + semester.Year;
 
             var isCaptcha = Captcha.CaptchaMatch(vm.WhoIs, vm.Captcha);
 
@@ -410,8 +390,6 @@ namespace App.Mvc.Controllers
                         var s = new StudentInfo()
                         {
                             ProgramId = vm.ProgramId,
-                            ExamId = vm.ExamId,
-                            SemesterId = vm.SemesterId,
                             IdNo = vm.IdNo,
                             Name = vm.Name,
                             ContactNo = vm.ContactNo,
@@ -423,25 +401,25 @@ namespace App.Mvc.Controllers
                         try
                         {
                             var pdfFile1 = vm.StudentImageFile;
-                            var pdfFile2 = vm.StudentPaymentFile;
-                            if (pdfFile1 != null && pdfFile2 != null)
+                            //var pdfFile2 = vm.StudentPaymentFile;
+                            if (pdfFile1 != null)
                             {
                                 // Save Path
                                 const string drive = "D";
 
                                 var savePathWithoutDrive1 = ":\\NubAdmit\\StudentImage\\";
-                                var savePathWithoutDrive2 = ":\\NubAdmit\\PaymentImage\\";
+                                //var savePathWithoutDrive2 = ":\\NubAdmit\\PaymentImage\\";
                                 string fileSavePath1 = drive + savePathWithoutDrive1;
-                                string fileSavePath2 = drive + savePathWithoutDrive2;
+                                //string fileSavePath2 = drive + savePathWithoutDrive2;
 
                                 if (!Directory.Exists(fileSavePath1))
                                 {
                                     Directory.CreateDirectory(fileSavePath1);
                                 }
-                                if (!Directory.Exists(fileSavePath2))
-                                {
-                                    Directory.CreateDirectory(fileSavePath2);
-                                }
+                                //if (!Directory.Exists(fileSavePath2))
+                                //{
+                                //    Directory.CreateDirectory(fileSavePath2);
+                                //}
 
                                 var fileName = s.Id + ".jpg";
                                 // var fileExtension = Path.GetExtension(pdfFile.FileName);
@@ -456,14 +434,14 @@ namespace App.Mvc.Controllers
                                     s.ImageFilePath = savePathWithoutDrive1 + fileName;
                                 }
 
-                                if (!System.IO.File.Exists(fileSavePath2 + fileName))
-                                {
-                                    // Save file
-                                    pdfFile2.SaveAs(fileSavePath2 + fileName);
+                                //if (!System.IO.File.Exists(fileSavePath2 + fileName))
+                                //{
+                                //    // Save file
+                                //    pdfFile2.SaveAs(fileSavePath2 + fileName);
 
-                                    // Save Path in Database
-                                    s.PaymentFilePath = savePathWithoutDrive2 + fileName;
-                                }
+                                //    // Save Path in Database
+                                //    s.PaymentFilePath = savePathWithoutDrive2 + fileName;
+                                //}
                             }
                         }
                         catch (Exception e)
@@ -479,7 +457,6 @@ namespace App.Mvc.Controllers
                         if (r > 0)
                         {
                             ModelState.Clear();
-                            ViewBag.ExamId = new SelectList(db.Exams, "Id", "Name");
                             ViewBag.ProgramId = new SelectList(db.Programs, "Id", "ShortName");
                             ViewBag.Message = "Successfully Submitted";
                             ViewBag.MessageColor = "text-success";
@@ -488,7 +465,6 @@ namespace App.Mvc.Controllers
                     }
                     else
                     {
-                        ViewBag.ExamId = new SelectList(db.Exams, "Id", "Name", vm.ExamId);
                         ViewBag.ProgramId = new SelectList(db.Programs, "Id", "ShortName", vm.ProgramId);
                         ViewBag.Message = "This ID No. Already in Database";
                         ViewBag.MessageColor = "text-danger";
@@ -496,18 +472,16 @@ namespace App.Mvc.Controllers
                     }
 
 
-                    ViewBag.ExamId = new SelectList(db.Exams, "Id", "Name", vm.ExamId);
                     ViewBag.ProgramId = new SelectList(db.Programs, "Id", "ShortName", vm.ProgramId);
                     ViewBag.Message = "Submit Fail";
                     ViewBag.MessageColor = "text-danger";
                     return View(vm);
                 }
             }
-            
+
 
             ViewBag.Message = "Submit Valid Value and Image";
             ViewBag.MessageColor = "text-warning";
-            ViewBag.ExamId = new SelectList(db.Exams, "Id", "Name", vm.ExamId);
             ViewBag.ProgramId = new SelectList(db.Programs, "Id", "ShortName", vm.ProgramId);
             return View(vm);
         }
@@ -529,7 +503,6 @@ namespace App.Mvc.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.ExamId = new SelectList(db.Exams, "Id", "Name", s.ExamId);
             ViewBag.ProgramId = new SelectList(db.Programs, "Id", "ShortName", s.ProgramId);
 
             var vm = new StudentEditVm()
@@ -537,10 +510,8 @@ namespace App.Mvc.Controllers
                 Id = s.Id,
                 IdNo = s.IdNo,
                 Name = s.Name,
-                SemesterId = s.SemesterId,
                 ContactNo = s.ContactNo,
                 Email = s.Email,
-                ExamId = s.ExamId,
                 ProgramId = s.ProgramId
             };
 
@@ -560,8 +531,6 @@ namespace App.Mvc.Controllers
                 if (s != null)
                 {
                     s.ProgramId = vm.ProgramId;
-                    s.SemesterId = vm.SemesterId;
-                    s.ExamId = vm.ExamId;
                     s.IdNo = vm.IdNo;
                     s.Name = vm.Name;
                     s.ContactNo = vm.ContactNo;
