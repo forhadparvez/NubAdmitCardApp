@@ -153,7 +153,7 @@ namespace App.Mvc.Controllers
                     {
                         PaymentId = p.Id,
                         StudentInfoId = student.Id,
-                        IsPaymentComplete = false,
+                        IsPaymentComplete = true,
                         ApproveBy = user,
                         ApproveDate = DateTime.Now
                     };
