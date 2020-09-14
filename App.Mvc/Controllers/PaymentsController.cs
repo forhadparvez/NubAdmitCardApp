@@ -132,7 +132,7 @@ namespace App.Mvc.Controllers
             ViewBag.SemesterId = semester.Id;
             ViewBag.Semester = semester.Name + " " + semester.Year;
 
-            var entity = db.Payments.Where(c => !c.IsDelete && c.SemesterId == vm.SemesterId && c.ExamId == vm.ExamId && c.DuesPercentAmount <= 100).ToList();
+            var entity = db.Payments.Where(c => !c.IsDelete && c.SemesterId == vm.SemesterId && c.ExamId == vm.ExamId && c.DuesPercentAmount <= 1000).ToList();
             foreach (var p in entity)
             {
                 var student = db.StudentInfos.FirstOrDefault(c => c.IdNo == p.StudentId && !c.IsDelete);
@@ -267,8 +267,8 @@ namespace App.Mvc.Controllers
                                             TotalPayable = StringToNumber(reader[7].ToString()),
                                             PayablePercentAmount = StringToNumber(reader[8].ToString()),
                                             ReceivedAmount = StringToNumber(reader[9].ToString()),
-                                            DuesPercentAmount = StringToNumber(reader[10].ToString()),
-                                            TotalDues = StringToNumber(reader[11].ToString())
+                                            DuesPercentAmount = StringToNumber(reader[10].ToString())
+                                            //TotalDues = StringToNumber(reader[11].ToString())
                                         };
 
                                         //if (!db.StudentInfos.Any(c => c.IdNo == studentId))
@@ -299,7 +299,7 @@ namespace App.Mvc.Controllers
                                         entityInDb.PayablePercentAmount = StringToNumber(reader[8].ToString());
                                         entityInDb.ReceivedAmount = StringToNumber(reader[9].ToString());
                                         entityInDb.DuesPercentAmount = StringToNumber(reader[10].ToString());
-                                        entityInDb.TotalDues = StringToNumber(reader[11].ToString());
+                                        //entityInDb.TotalDues = StringToNumber(reader[11].ToString());
 
                                         db.SaveChanges();
                                     }

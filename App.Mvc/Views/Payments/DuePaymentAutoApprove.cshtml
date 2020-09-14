@@ -4,7 +4,7 @@
     ViewBag.Title = "PaymentAutoApprove";
 }
 
-@using (Ajax.BeginForm("PaymentAutoApprove", "Payments", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnFailure = "OnFailure" }, new { enctype = "multipart/form-data" }))
+@using (Ajax.BeginForm("DuePaymentAutoApprove", "Payments", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnFailure = "OnFailure" }, new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
     <div class="panel panel-info">
@@ -38,7 +38,7 @@
                     <div class="form-group">
                         @Html.LabelFor(model => model.MinDuePayment, htmlAttributes: new { @class = "control-label col-md-3" })
                         <div class="col-md-9">
-                            @Html.EditorFor(model => model.MinDuePayment, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.EditorFor(model => model.MinDuePayment, new { htmlAttributes = new { @class = "form-control", @placeholder = "Min value 1001" } })
                             @Html.ValidationMessageFor(model => model.MinDuePayment, "", new { @class = "text-danger" })
                         </div>
                     </div>
@@ -46,7 +46,7 @@
                     <div class="form-group">
                         @Html.LabelFor(model => model.MaxDuePayment, htmlAttributes: new { @class = "control-label col-md-3" })
                         <div class="col-md-9">
-                            @Html.EditorFor(model => model.MaxDuePayment, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.EditorFor(model => model.MaxDuePayment, new { htmlAttributes = new { @class = "form-control", @placeholder="Max value as per your choice"} })
                             @Html.ValidationMessageFor(model => model.MaxDuePayment, "", new { @class = "text-danger" })
                         </div>
                     </div>
