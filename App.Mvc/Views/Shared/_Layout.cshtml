@@ -55,15 +55,15 @@
             </div>
         </div>
     </div>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer class="text-center">
-            <p>&copy; @DateTime.Now.Year - Department of Computer Science & Engineering || Developed By: ECSE 23 Batch</p>
-        </footer>
-    </div>
+<div class="container body-content">
+    @RenderBody()
+</div>
 
-    @Scripts.Render("~/bundles/jquery")
+<footer class="text-center footer">
+    <p style="color: white"><strong> &copy; @DateTime.Now.Year - Department of Computer Science & Engineering || Developed By: ECSE 23 Batch</strong></p>
+</footer>
+
+@Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
 </body>

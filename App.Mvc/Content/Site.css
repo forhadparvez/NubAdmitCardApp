@@ -1,4 +1,11 @@
-﻿body {
+﻿@media screen and (min-width: 768px) {
+    .jumbotron {
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+}
+
+body {
     padding-top: 50px;
     padding-bottom: 20px;
 }
@@ -39,6 +46,19 @@ textarea {
     padding: 5px 5px;
 }
 
-.logoimage{
+.logoimage {
+    -ms-border-radius:20px;
     border-radius:20px;
+}
+
+
+.footer {
+    background: #158CBA;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    white-space: nowrap;
+    /* Set the fixed height of the footer here */
+    height: 35px;
+    line-height: 35px; /* Vertically center the text there */
 }
