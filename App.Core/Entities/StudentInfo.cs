@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace App.Core.Entities
 {
@@ -21,6 +22,8 @@ namespace App.Core.Entities
 
         [Required]
         [Display(Name = "Student ID")]
+        [Index(IsUnique = true)]
+        [StringLength(15)]
         public string IdNo { get; set; }
 
         [Required]

@@ -254,6 +254,10 @@
     <Compile Include="Migrations\202009091816157_UpdateStudentInfoTable2.Designer.cs">
       <DependentUpon>202009091816157_UpdateStudentInfoTable2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202009161640578_UniqueKeyStudentInfo.cs" />
+    <Compile Include="Migrations\202009161640578_UniqueKeyStudentInfo.Designer.cs">
+      <DependentUpon>202009161640578_UniqueKeyStudentInfo.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
@@ -690,6 +694,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202009091816157_UpdateStudentInfoTable2.resx">
       <DependentUpon>202009091816157_UpdateStudentInfoTable2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202009161640578_UniqueKeyStudentInfo.resx">
+      <DependentUpon>202009161640578_UniqueKeyStudentInfo.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

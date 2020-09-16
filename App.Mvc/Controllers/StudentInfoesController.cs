@@ -58,35 +58,32 @@ namespace App.Mvc.Controllers
 
         public async Task<ActionResult> GetPaymentStatusApproval(byte programId, int semesterId, byte examId)
         {
-            string root = Server.MapPath("~");
-            var outputPath = root + @"StudentInfoes";
-            if (Directory.Exists(outputPath))
-            {
-                var di = new DirectoryInfo(outputPath);
-                foreach (var file in di.GetFiles())
-                {
-                    file.Delete();
-                }
-            }
-            else
-            {
-                Directory.CreateDirectory(outputPath);
-            }
-
             var result = new List<StudentInfo>();
 
-            var payments = await db.Payments.Include(s => s.Program)
-                .Where(c => !c.IsDelete && c.ProgramId == programId && c.SemesterId == semesterId && c.ExamId == examId).ToListAsync();
-            foreach (var pay in payments)
+            var payments = await db.Payments
+                .Where(c => !c.IsDelete && c.ProgramId == programId && c.SemesterId == semesterId && c.ExamId == examId)
+                .Select(c => new { c.Id, c.StudentId }).ToListAsync();
+
+            try
             {
-                var isExist = db.AdmitCardApprovals.Any(c => c.PaymentId == pay.Id && !c.IsDelete);
-                var std = await db.StudentInfos.Include(c => c.Program).SingleOrDefaultAsync(c => c.IdNo == pay.StudentId);
-                var isExist2 = db.AdmitCardRequests.Any(c => c.StudentInfoId == std.Id && !c.IsDone);
+                foreach (var pay in payments)
+                {
+                    var std = db.StudentInfos.Include(c => c.Program).SingleOrDefault(c => c.IdNo == pay.StudentId && !c.IsDelete);
+                    var isExist2 = false;
+                    if (std != null)
+                        isExist2 = db.AdmitCardRequests.Any(c => c.StudentInfoId == std.Id && !c.IsDone);
 
-                if (!isExist || isExist2)
-                    result.Add(std);
+                    if (isExist2)
+                        result.Add(std);
 
+                }
             }
+            catch (Exception e)
+            {
+
+                // e
+            }
+
             return Json(result, JsonRequestBehavior.AllowGet);
 
         }
