@@ -520,7 +520,7 @@ namespace App.Mvc.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "Id,ProgramId,SemesterId,ExamId,IdNo,Name,ContactNo,Email")] StudentEditVm vm)
+        public async Task<ActionResult> Edit([Bind(Include = "Id,ProgramId,IdNo,Name,ContactNo,Email")] StudentEditVm vm)
         {
             if (ModelState.IsValid)
             {
@@ -534,7 +534,7 @@ namespace App.Mvc.Controllers
                     s.Email = vm.Email;
                 }
                 await db.SaveChangesAsync();
-                return RedirectToAction("ApprovedList");
+                return RedirectToAction("StudentList");
             }
 
             var semester = db.Semesters.SingleOrDefault(c => c.IsActive);
@@ -546,6 +546,23 @@ namespace App.Mvc.Controllers
             ViewBag.ProgramId = new SelectList(db.Programs, "Id", "Name", vm.ProgramId);
             return View(vm);
         }
+
+        public ActionResult StudentList()
+        {
+            ViewBag.ProgramId = new SelectList(db.Programs, "Id", "ShortName");
+            return View();
+        }
+
+        public async Task<ActionResult> GetStudentList(byte programId)
+        {
+            var students = await db.StudentInfos.Include(c=>c.Program)
+                .Where(c => !c.IsDelete && c.ProgramId == programId)
+                .ToListAsync();
+
+            return Json(students, JsonRequestBehavior.AllowGet);
+
+        }
+
 
         // GET: StudentInfoes/Delete/5
         public async Task<ActionResult> Delete(long? id)

@@ -620,6 +620,7 @@
     <Content Include="Views\Payments\PaymentList.cshtml" />
     <Content Include="Views\Payments\PaymentAutoApprove.cshtml" />
     <Content Include="Views\Payments\DuePaymentAutoApprove.cshtml" />
+    <Content Include="Views\StudentInfoes\StudentList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

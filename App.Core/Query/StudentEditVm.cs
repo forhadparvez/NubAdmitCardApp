@@ -13,11 +13,11 @@ namespace App.Core.Query
 
         public Semester Semester { get; set; }
         [Display(Name = "Semester")]
-        public int SemesterId { get; set; }
+        public int? SemesterId { get; set; }
 
         public Exam Exam { get; set; }
         [Display(Name = "Exam")]
-        public byte ExamId { get; set; }
+        public byte? ExamId { get; set; }
 
         [Required]
         [Display(Name = "Student ID")]
