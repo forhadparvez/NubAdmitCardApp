@@ -47,6 +47,7 @@
                         Email
                     </th>
                     <th>Edit</th>
+                    <th>Clear</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -136,10 +137,31 @@
                             render: function(data) {
                                 return "<a class='btn btn-primary' href='/StudentInfoes/Edit/" + data + "'>Edit</a></td>";
                             }
+                        },
+                        {
+                            data: "Id",
+                            render: function (data) {
+                                return "<a class='js-clear btn btn-danger' data-id='" + data + "'>Clear</a></td>";
+                            }
                         }
                     ]
                 });
 
             });
+
+
+        $(document.body).on("click", ".js-clear", function () {
+            var button = $(this);
+            var id = button.attr("data-id");
+
+            $.get("/StudentInfoes/ClearData?id=" + id ,
+                function (r) {
+                    if (r > 0) {
+                        alert("Success");
+                    }
+                    else
+                        alert("Fail");
+                });
+        });
     </script>
 }

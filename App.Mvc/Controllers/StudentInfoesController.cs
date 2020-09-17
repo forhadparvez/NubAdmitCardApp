@@ -563,6 +563,20 @@ namespace App.Mvc.Controllers
 
         }
 
+        public async Task<ActionResult> ClearData(long id)
+        {
+            var admit = await db.AdmitCardApprovals.Where(c => c.StudentInfoId == id).ToListAsync();
+            var r = db.AdmitCardApprovals.RemoveRange(admit);
+
+            var students =await db.AdmitCardRequests.Where(c=>c.StudentInfoId==id).ToListAsync();
+            var r2=db.AdmitCardRequests.RemoveRange(students);
+
+
+            return Json(r, JsonRequestBehavior.AllowGet);
+
+        }
+        
+
 
         // GET: StudentInfoes/Delete/5
         public async Task<ActionResult> Delete(long? id)
