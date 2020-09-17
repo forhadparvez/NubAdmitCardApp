@@ -57,7 +57,7 @@ namespace App.Mvc.Controllers
             ViewBag.SemesterId = semester.Id;
             ViewBag.Semester = semester.Name + " " + semester.Year;
 
-            var entity = db.Payments.Where(c => !c.IsDelete && c.SemesterId == vm.SemesterId && c.ExamId == vm.ExamId && c.DuesPercentAmount <= vm.MaxDuePayment && c.DuesPercentAmount >= vm.MinDuePayment).ToList();
+            var entity = db.Payments.Where(c => !c.IsDelete && c.ProgramId == vm.ProgramId && c.SemesterId == vm.SemesterId && c.ExamId == vm.ExamId && c.DuesPercentAmount <= vm.MaxDuePayment && c.DuesPercentAmount >= vm.MinDuePayment).ToList();
             foreach (var p in entity)
             {
                 var student = db.StudentInfos.FirstOrDefault(c => c.IdNo == p.StudentId && !c.IsDelete);
@@ -132,7 +132,7 @@ namespace App.Mvc.Controllers
             ViewBag.SemesterId = semester.Id;
             ViewBag.Semester = semester.Name + " " + semester.Year;
 
-            var entity = db.Payments.Where(c => !c.IsDelete && c.SemesterId == vm.SemesterId && c.ExamId == vm.ExamId && c.DuesPercentAmount <= 1000).ToList();
+            var entity = db.Payments.Where(c => !c.IsDelete && c.ProgramId==vm.ProgramId && c.SemesterId == vm.SemesterId && c.ExamId == vm.ExamId && c.DuesPercentAmount <= 1000).ToList();
             foreach (var p in entity)
             {
                 var student = db.StudentInfos.FirstOrDefault(c => c.IdNo == p.StudentId && !c.IsDelete);
