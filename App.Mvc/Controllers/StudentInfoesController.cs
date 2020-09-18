@@ -555,7 +555,7 @@ namespace App.Mvc.Controllers
 
         public async Task<ActionResult> GetStudentList(byte programId)
         {
-            var students = await db.StudentInfos.Include(c=>c.Program)
+            var students = await db.StudentInfos.Include(c => c.Program)
                 .Where(c => !c.IsDelete && c.ProgramId == programId)
                 .ToListAsync();
 
@@ -566,16 +566,17 @@ namespace App.Mvc.Controllers
         public async Task<ActionResult> ClearData(long id)
         {
             var admit = await db.AdmitCardApprovals.Where(c => c.StudentInfoId == id).ToListAsync();
-            var r = db.AdmitCardApprovals.RemoveRange(admit);
+            db.AdmitCardApprovals.RemoveRange(admit);
 
-            var students =await db.AdmitCardRequests.Where(c=>c.StudentInfoId==id).ToListAsync();
-            var r2=db.AdmitCardRequests.RemoveRange(students);
+            var students = await db.AdmitCardRequests.Where(c => c.StudentInfoId == id).ToListAsync();
+            db.AdmitCardRequests.RemoveRange(students);
 
+            var r = await db.SaveChangesAsync();
 
             return Json(r, JsonRequestBehavior.AllowGet);
 
         }
-        
+
 
 
         // GET: StudentInfoes/Delete/5
